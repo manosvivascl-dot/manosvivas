@@ -172,6 +172,20 @@ strong { color: var(--text); font-weight: 500; }
   font-weight: 600 !important;
 }
 
+/* ── Domicilio pill ── */
+.hero-domicilio { margin-bottom: 20px; }
+.domicilio-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 18px;
+  background: rgba(184,154,110,.12);
+  border: 1px solid var(--gold-light);
+  border-radius: 100px;
+  font-size: .82rem;
+  font-weight: 500;
+  color: var(--brown);
+  letter-spacing: .03em;
+}
+
 /* ── HERO ── */
 .hero {
   min-height: 100vh;
