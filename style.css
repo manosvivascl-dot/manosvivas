@@ -455,6 +455,36 @@ strong { color: var(--text); font-weight: 500; }
 .sobre-shape { width: 280px; height: 340px; color: var(--gold); }
 .sobre-shape svg { width: 100%; height: 100%; }
 
+/* ── Founder ── */
+.sobre-founder {
+  margin: 28px 0;
+  padding: 20px 24px;
+  border-left: 2px solid var(--gold);
+  background: var(--cream-dark);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+.founder-tag {
+  font-size: .7rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.founder-name {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--dark) !important;
+  margin: 0 0 4px !important;
+}
+.founder-role {
+  font-size: .82rem;
+  color: var(--text-muted) !important;
+  margin: 0 !important;
+  line-height: 1.5;
+}
+
 /* ── Testimonios ── */
 .testimonios-grid {
   display: grid;
