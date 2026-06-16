@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manos Vivas — Centro de Masajes & Estética Corporal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a href="#" class="logo">
+      <svg class="logo-svg" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Manos Vivas logo">
+        <!-- Mano estilizada minimalista -->
+        <path d="M30 52 C18 44 10 34 10 24 C10 16 16 10 24 12 C26 12.5 28 14 30 16 C32 14 34 12.5 36 12 C44 10 50 16 50 24 C50 34 42 44 30 52Z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+        <path d="M30 16 L30 38" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M24 20 L24 36" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M36 20 L36 36" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="30" cy="8" r="2" fill="currentColor" opacity="0.5"/>
+      </svg>
+      <span class="logo-text">Manos Vivas</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#servicios">Servicios</a>
+      <a href="#packs">Packs</a>
+      <a href="#sobre">Nosotras</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <button class="nav-cta" onclick="document.getElementById('packs').scrollIntoView({behavior:'smooth'})">Reservar</button>
+    <button class="burger" aria-label="Menú" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#servicios" onclick="toggleMenu()">Servicios</a>
+    <a href="#packs" onclick="toggleMenu()">Packs</a>
+    <a href="#sobre" onclick="toggleMenu()">Nosotras</a>
+    <a href="#contacto" onclick="toggleMenu()">Contacto</a>
+    <a href="#packs" class="mobile-cta" onclick="toggleMenu()">Reservar</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <span class="hero-badge">✦ Lanzamiento especial ✦</span>
+      <h1>El bienestar que <em>merecés</em></h1>
+      <p>Masajes terapéuticos, relajantes y tratamientos reductivos con aparatología de última generación. Tu cuerpo en manos expertas.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('packs').scrollIntoView({behavior:'smooth'})">Ver packs con descuento</button>
+        <button class="btn-ghost" onclick="document.getElementById('servicios').scrollIntoView({behavior:'smooth'})">Conocer servicios</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div class="hero-icon">◈</div>
+        <p>Más de <strong>10 tipos</strong> de masajes y tratamientos</p>
+      </div>
+      <div class="hero-card">
+        <div class="hero-icon">◇</div>
+        <p>Aparatología <strong>profesional</strong> certificada</p>
+      </div>
+      <div class="hero-card hero-card--accent">
+        <div class="hero-icon">✦</div>
+        <p><strong>Descuentos de lanzamiento</strong> disponibles ahora</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="section" id="servicios">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Lo que ofrecemos</span>
+        <h2>Nuestros Servicios</h2>
+        <p>Cada tratamiento es personalizado para tu cuerpo y tus objetivos.</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="masajes">Masajes</button>
+        <button class="tab" data-tab="reductivos">Reductivos & Aparatología</button>
+      </div>
+
+      <div class="tab-content active" id="tab-masajes">
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-icon">〰</div>
+            <h3>Masaje Relajante</h3>
+            <p>Técnica sueca con aceites esenciales. Alivia la tensión muscular y libera el estrés acumulado.</p>
+            <span class="service-time">60 / 90 min</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">⊕</div>
+            <h3>Masaje Descontracturante</h3>
+            <p>Enfocado en nudos musculares profundos. Ideal para contracturas cervicales y lumbares.</p>
+            <span class="service-time">60 min</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">◉</div>
+            <h3>Masaje con Piedras Calientes</h3>
+            <p>Basalto volcánico que penetra el calor en capas profundas del músculo. Profunda relajación.</p>
+            <span class="service-time">75 min</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">⋈</div>
+            <h3>Masaje Deportivo</h3>
+            <p>Pre y post actividad física. Mejora la recuperación muscular y el rendimiento.</p>
+            <span class="service-time">60 min</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">✿</div>
+            <h3>Masaje Linfático</h3>
+            <p>Drenaje suave que activa el sistema linfático, reduce retención y mejora la circulación.</p>
+            <span class="service-time">60 / 90 min</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">❋</div>
+            <h3>Masaje Remodelador</h3>
+            <p>Técnicas de presión y amasamiento para moldear la silueta y activar la circulación local.</p>
+            <span class="service-time">60 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="tab-reductivos">
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-icon">◈</div>
+            <h3>Cavitación Ultrasónica</h3>
+            <p>Ultrasonido de baja frecuencia que destruye células de grasa localizada de forma no invasiva.</p>
+            <span class="service-time">45 min / zona</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">⊛</div>
+            <h3>Radiofrecuencia Corporal</h3>
+            <p>Calor controlado que estimula el colágeno, reafirma la piel y reduce la apariencia de celulitis.</p>
+            <span class="service-time">45 min</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">◎</div>
+            <h3>Presoterapia</h3>
+            <p>Drenaje linfático mediante presión de aire secuencial. Reduce piernas pesadas y retención.</p>
+            <span class="service-time">45 min</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">⋇</div>
+            <h3>Electroestimulación</h3>
+            <p>Corrientes eléctricas de baja frecuencia para tonificar musculatura y mejorar definición.</p>
+            <span class="service-time">30 min</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">✦</div>
+            <h3>Vacumterapia</h3>
+            <p>Succión controlada que activa la circulación, reduce celulitis y drena toxinas acumuladas.</p>
+            <span class="service-time">40 min</span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">◇</div>
+            <h3>Tratamiento Integral Reductivo</h3>
+            <p>Combinación de cavitación + radiofrecuencia + drenaje linfático para máximos resultados.</p>
+            <span class="service-time">90 min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKS LANZAMIENTO -->
+  <section class="section section--dark" id="packs">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">✦ Oferta de lanzamiento</span>
+        <h2>Packs con Descuento</h2>
+        <p>Por tiempo limitado, celebramos nuestra apertura con precios especiales. <strong>No te los pierdas.</strong></p>
+      </div>
+
+      <div class="packs-grid">
+
+        <div class="pack-card">
+          <div class="pack-badge">Más popular</div>
+          <div class="pack-header">
+            <span class="pack-icon">〰</span>
+            <h3>Pack Relajación</h3>
+            <p class="pack-sub">4 masajes relajantes</p>
+          </div>
+          <div class="pack-price">
+            <span class="pack-old">$28.000</span>
+            <span class="pack-new">$19.600</span>
+            <span class="pack-discount">30% OFF</span>
+          </div>
+          <ul class="pack-list">
+            <li>✓ 4 sesiones de 60 min</li>
+            <li>✓ Aceites esenciales incluidos</li>
+            <li>✓ Válido por 2 meses</li>
+            <li>✓ Turno reservado</li>
+          </ul>
+          <button class="pack-btn" onclick="abrirContacto('Pack Relajación')">Quiero este pack</button>
+        </div>
+
+        <div class="pack-card pack-card--featured">
+          <div class="pack-badge pack-badge--featured">⭐ Lanzamiento</div>
+          <div class="pack-header">
+            <span class="pack-icon">◈</span>
+            <h3>Pack Reductivo</h3>
+            <p class="pack-sub">6 sesiones de aparatología</p>
+          </div>
+          <div class="pack-price">
+            <span class="pack-old">$54.000</span>
+            <span class="pack-new">$35.100</span>
+            <span class="pack-discount">35% OFF</span>
+          </div>
+          <ul class="pack-list">
+            <li>✓ Cavitación + Radiofrecuencia</li>
+            <li>✓ Evaluación corporal inicial</li>
+            <li>✓ Seguimiento personalizado</li>
+            <li>✓ Válido por 3 meses</li>
+          </ul>
+          <button class="pack-btn pack-btn--featured" onclick="abrirContacto('Pack Reductivo')">Quiero este pack</button>
+        </div>
+
+        <div class="pack-card">
+          <div class="pack-badge">Completo</div>
+          <div class="pack-header">
+            <span class="pack-icon">✿</span>
+            <h3>Pack Wellness</h3>
+            <p class="pack-sub">Masajes + Aparatología</p>
+          </div>
+          <div class="pack-price">
+            <span class="pack-old">$72.000</span>
+            <span class="pack-new">$46.800</span>
+            <span class="pack-discount">35% OFF</span>
+          </div>
+          <ul class="pack-list">
+            <li>✓ 4 masajes a elección</li>
+            <li>✓ 4 sesiones de aparatología</li>
+            <li>✓ Presoterapia incluida</li>
+            <li>✓ Válido por 3 meses</li>
+          </ul>
+          <button class="pack-btn" onclick="abrirContacto('Pack Wellness')">Quiero este pack</button>
+        </div>
+
+      </div>
+
+      <p class="packs-note">* Precios de lanzamiento por tiempo limitado. Consultá disponibilidad y medios de pago.</p>
+    </div>
+  </section>
+
+  <!-- SOBRE NOSOTRAS -->
+  <section class="section" id="sobre">
+    <div class="container container--flex">
+      <div class="sobre-text">
+        <span class="section-tag">Nuestra historia</span>
+        <h2>Manos que <em>cuidan</em></h2>
+        <p>Manos Vivas nació del deseo de crear un espacio donde cada persona pueda reconectar con su cuerpo. Somos terapeutas certificadas con formación en técnicas clásicas y modernas, comprometidas con tu bienestar real.</p>
+        <p>Trabajamos con aparatología de última generación en un ambiente íntimo, cálido y profesional. Cada sesión es un momento tuyo.</p>
+        <div class="sobre-stats">
+          <div class="stat">
+            <strong>10+</strong>
+            <span>Técnicas de masaje</span>
+          </div>
+          <div class="stat">
+            <strong>6</strong>
+            <span>Equipos de aparatología</span>
+          </div>
+          <div class="stat">
+            <strong>100%</strong>
+            <span>Atención personalizada</span>
+          </div>
+        </div>
+      </div>
+      <div class="sobre-visual">
+        <div class="sobre-shape">
+          <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="100" cy="120" rx="80" ry="100" stroke="currentColor" stroke-width="1" opacity="0.15"/>
+            <ellipse cx="100" cy="120" rx="55" ry="70" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+            <path d="M100 170 C70 155 55 130 55 110 C55 85 75 70 100 75 C125 70 145 85 145 110 C145 130 130 155 100 170Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M100 75 L100 145" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+            <path d="M78 90 L78 138" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+            <path d="M122 90 L122 138" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+            <circle cx="100" cy="60" r="5" fill="currentColor" opacity="0.3"/>
+            <text x="100" y="210" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="13" fill="currentColor" opacity="0.5" letter-spacing="3">MANOS VIVAS</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section class="section section--soft">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Primeras clientas</span>
+        <h2>Ellas ya lo vivieron</h2>
+      </div>
+      <div class="testimonios-grid">
+        <div class="testimonio">
+          <p>"El masaje descontracturante fue increíble. Salí sintiéndome nueva. El ambiente es súper íntimo y profesional."</p>
+          <span>— Valentina R.</span>
+        </div>
+        <div class="testimonio">
+          <p>"Hice el pack reductivo y noté cambios desde la tercera sesión. Me explicaron todo con paciencia y dedicación."</p>
+          <span>— Luciana M.</span>
+        </div>
+        <div class="testimonio">
+          <p>"La presoterapia para mis piernas pesadas fue un antes y después. Ya reservé el próximo pack de lanzamiento."</p>
+          <span>— Florencia A.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="section" id="contacto">
+    <div class="container container--narrow">
+      <div class="section-header">
+        <span class="section-tag">Hablemos</span>
+        <h2>Reservá tu turno</h2>
+        <p>Completá el formulario y te contactamos a la brevedad para confirmar tu sesión o pack elegido.</p>
+      </div>
+      <form class="contact-form" id="contactForm" onsubmit="enviarFormulario(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" placeholder="Tu nombre" required />
+          </div>
+          <div class="form-group">
+            <label for="tel">Teléfono / WhatsApp</label>
+            <input type="tel" id="tel" placeholder="+54 9 ..." required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="servicio">¿Qué te interesa?</label>
+          <select id="servicio">
+            <option value="">Seleccioná un servicio o pack</option>
+            <option>Masaje Relajante</option>
+            <option>Masaje Descontracturante</option>
+            <option>Masaje con Piedras Calientes</option>
+            <option>Masaje Deportivo</option>
+            <option>Masaje Linfático</option>
+            <option>Cavitación Ultrasónica</option>
+            <option>Radiofrecuencia Corporal</option>
+            <option>Presoterapia</option>
+            <option>Pack Relajación — 30% OFF</option>
+            <option>Pack Reductivo — 35% OFF</option>
+            <option>Pack Wellness — 35% OFF</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="mensaje">Mensaje (opcional)</label>
+          <textarea id="mensaje" rows="3" placeholder="Contanos algo más, días disponibles, consultas..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary btn-full">Enviar consulta</button>
+        <p class="form-note">También podés escribirnos por <a href="https://wa.me/5491100000000" target="_blank">WhatsApp</a> ↗</p>
+      </form>
+      <div class="form-success" id="formSuccess">
+        <div class="success-icon">✦</div>
+        <h3>¡Gracias por escribirnos!</h3>
+        <p>Nos ponemos en contacto en las próximas horas para confirmar tu turno.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-logo">
+        <svg class="logo-svg" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 52 C18 44 10 34 10 24 C10 16 16 10 24 12 C26 12.5 28 14 30 16 C32 14 34 12.5 36 12 C44 10 50 16 50 24 C50 34 42 44 30 52Z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+          <path d="M30 16 L30 38" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M24 20 L24 36" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M36 20 L36 36" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="30" cy="8" r="2" fill="currentColor" opacity="0.5"/>
+        </svg>
+        <span>Manos Vivas</span>
+      </div>
+      <p class="footer-tagline">Bienestar con propósito · Masajes & Estética Corporal</p>
+      <div class="footer-links">
+        <a href="#servicios">Servicios</a>
+        <a href="#packs">Packs</a>
+        <a href="#sobre">Nosotras</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+      <p class="footer-copy">© 2024 Manos Vivas. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- MODAL CONTACTO -->
+  <div class="modal-overlay" id="modalOverlay" onclick="cerrarModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="cerrarModal()">×</button>
+      <h3 id="modalTitle">Reservar pack</h3>
+      <p>Completá tus datos y te contactamos para coordinar tu sesión.</p>
+      <form onsubmit="enviarModal(event)">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" placeholder="Tu nombre" required />
+        </div>
+        <div class="form-group">
+          <label>WhatsApp</label>
+          <input type="tel" placeholder="+54 9 ..." required />
+        </div>
+        <button type="submit" class="btn-primary btn-full">Enviar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
