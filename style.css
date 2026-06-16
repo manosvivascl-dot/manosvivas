@@ -620,6 +620,32 @@ strong { color: var(--text); font-weight: 500; }
 }
 .modal-close:hover { color: var(--dark); }
 
+/* ── WhatsApp flotante ── */
+.whatsapp-float {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #25D366;
+  color: #fff;
+  padding: 12px 20px 12px 14px;
+  border-radius: 100px;
+  box-shadow: 0 4px 20px rgba(37,211,102,.4);
+  font-size: .85rem;
+  font-weight: 500;
+  letter-spacing: .03em;
+  transition: var(--transition);
+}
+.whatsapp-float:hover {
+  background: #1ebe5d;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(37,211,102,.5);
+}
+.whatsapp-float svg { width: 26px; height: 26px; flex-shrink: 0; }
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .hero {
