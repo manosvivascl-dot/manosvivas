@@ -1,880 +1,802 @@
 <!DOCTYPE html>
-<html lang="es-CL">
+
+<html data-modo="dia" lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Manos Vivas — Masajes a domicilio en Santiago</title>
-<meta name="description" content="Masaje profesional a domicilio en Santiago. Sesenta minutos netos, sin dolor, adaptado a ti. Desde 2018, con experiencia en hotelería de lujo." />
-<meta name="theme-color" content="#2a2f26" />
-<meta property="og:title" content="Manos Vivas — Masajes a domicilio" />
-<meta property="og:description" content="El bienestar no es negociable. Masaje profesional en tu casa, a tu hora, a tu manera." />
-<meta property="og:type" content="website" />
-<link rel="apple-touch-icon" href="manos-vivas-favicon-180.png" />
-<link rel="icon" href="manos-vivas-favicon-64.png" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="style.css?v=20260830" />
+<meta content="Masaje profesional a domicilio en Santiago. Sesenta minutos netos, sin dolor, adaptado a ti. Desde 2018, con experiencia en hotelería de lujo." name="description"/>
+<meta content="#2a2f26" name="theme-color"/>
+<meta content="Manos Vivas — Masajes a domicilio" property="og:title"/>
+<meta content="El bienestar no es negociable. Masaje profesional en tu casa, a tu hora, a tu manera." property="og:description"/>
+<meta content="website" property="og:type"/>
+<link href="manos-vivas-favicon-180.png" rel="apple-touch-icon"/>
+<link href="manos-vivas-favicon-64.png" rel="icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&amp;family=Karla:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="style.css?v=20260830" rel="stylesheet"/>
 </head>
 <body>
-
+<!-- Fondo sensorial: reacciona a tus dedos -->
+<canvas aria-hidden="true" class="fondo" data-fondo=""></canvas>
 <!-- ════════════════════════════════════════════
      APERTURA · el aceite cae y revela la web
      ════════════════════════════════════════════ -->
-<div class="oil" data-oil aria-hidden="true">
-
-  <div class="oil__stage">
-    <svg class="oil__mark" viewBox="20 32.5 60 60">
-      <g fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
-        <path class="oil__bowl" d="M26 58a24 24 0 0 0 48 0"/>
-        <path class="oil__wave-mark" d="M32 58C37 44 46 44 50 52S63 60 68 46"/>
-      </g>
-      <circle class="oil__seed" cx="68" cy="46" r="4.6" fill="var(--terracota)"/>
-    </svg>
-
-    <span class="oil__drop oil__drop--1"></span>
-    <span class="oil__drop oil__drop--2"></span>
-    <span class="oil__drop oil__drop--3"></span>
-  </div>
-
-  <svg class="oil__pour" viewBox="0 0 1440 1000" preserveAspectRatio="none">
-    <defs>
-      <linearGradient id="oilGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="#d4a574"/>
-        <stop offset="45%"  stop-color="#b5651d"/>
-        <stop offset="100%" stop-color="#8f4f15"/>
-      </linearGradient>
-    </defs>
-    <path class="oil__surface" fill="url(#oilGrad)"
-      d="M0,1000 L0,120 Q180,60 360,120 T720,120 T1080,120 T1440,120 L1440,1000 Z"/>
-  </svg>
-
-  <p class="oil__word">Manos Vivas</p>
+<div aria-hidden="true" class="oil" data-oil="">
+<div class="oil__stage">
+<svg class="oil__mark" viewbox="20 32.5 60 60">
+<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3.4">
+<path class="oil__bowl" d="M26 58a24 24 0 0 0 48 0"></path>
+<path class="oil__wave-mark" d="M32 58C37 44 46 44 50 52S63 60 68 46"></path>
+</g>
+<circle class="oil__seed" cx="68" cy="46" fill="var(--terracota)" r="4.6"></circle>
+</svg>
+<span class="oil__drop oil__drop--1"></span>
+<span class="oil__drop oil__drop--2"></span>
+<span class="oil__drop oil__drop--3"></span>
 </div>
-
-
+<svg class="oil__pour" preserveaspectratio="none" viewbox="0 0 1440 1000">
+<defs>
+<lineargradient id="oilGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#d4a574"></stop>
+<stop offset="45%" stop-color="#b5651d"></stop>
+<stop offset="100%" stop-color="#8f4f15"></stop>
+</lineargradient>
+</defs>
+<path class="oil__surface" d="M0,1000 L0,120 Q180,60 360,120 T720,120 T1080,120 T1440,120 L1440,1000 Z" fill="url(#oilGrad)"></path>
+</svg>
+<p class="oil__word">Manos Vivas</p>
+</div>
+<!-- ════════════════════════════════════════════
+     CONTROLES · idioma, modo, texto y sonido
+     ════════════════════════════════════════════ -->
+<div class="tools" data-tools="">
+<div aria-label="Idioma" class="tools__group" role="group">
+<button aria-pressed="true" class="tool tool--lang is-on" data-lang="es" lang="es">ES</button>
+<button aria-pressed="false" class="tool tool--lang" data-lang="en" lang="en">EN</button>
+<button aria-pressed="false" class="tool tool--lang" data-lang="fr" lang="fr">FR</button>
+</div>
+<div aria-label="Tamaño del texto" class="tools__group" data-t-label="a11y.texto" role="group">
+<button aria-label="Texto más pequeño" class="tool" data-t-label="a11y.menos" data-texto="menos">A<sup>−</sup></button>
+<button aria-label="Texto más grande" class="tool" data-t-label="a11y.mas" data-texto="mas">A<sup>+</sup></button>
+</div>
+<button aria-label="Cambiar entre día y noche" aria-pressed="false" class="tool tool--icon" data-modo-btn="" data-t-label="a11y.modo">
+<svg aria-hidden="true" class="ico ico--sol" viewbox="0 0 24 24">
+<circle cx="12" cy="12" fill="currentColor" r="4.4"></circle>
+<g stroke="currentColor" stroke-linecap="round" stroke-width="1.8">
+<path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.5 1.5M17.1 17.1l1.5 1.5M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5"></path>
+</g>
+</svg>
+<svg aria-hidden="true" class="ico ico--luna" viewbox="0 0 24 24">
+<path d="M20.4 14.3A8.6 8.6 0 0 1 9.7 3.6a8.6 8.6 0 1 0 10.7 10.7z" fill="currentColor"></path>
+</svg>
+</button>
+<button aria-label="Encender el sonido ambiental" aria-pressed="false" class="tool tool--icon" data-sonido-btn="" data-t-label="a11y.sonido">
+<svg aria-hidden="true" class="ico ico--mudo" viewbox="0 0 24 24">
+<path d="M4 9.5h3.4L12 5.4v13.2L7.4 14.5H4z" fill="currentColor"></path>
+<path d="M16 9.6l4.2 4.8M20.2 9.6L16 14.4" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+</svg>
+<svg aria-hidden="true" class="ico ico--suena" viewbox="0 0 24 24">
+<path d="M4 9.5h3.4L12 5.4v13.2L7.4 14.5H4z" fill="currentColor"></path>
+<path d="M15.4 9.2a4 4 0 0 1 0 5.6M18.1 6.8a7.6 7.6 0 0 1 0 10.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+</svg>
+</button>
+</div>
 <!-- ════════════════════════════════════════════
      NAVEGACIÓN
      ════════════════════════════════════════════ -->
-<header class="nav" data-nav>
-  <a href="#inicio" class="nav__logo" aria-label="Manos Vivas, inicio">
-    <svg viewBox="20 32.5 60 60" aria-hidden="true">
-      <g fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="round">
-        <path d="M26 58a24 24 0 0 0 48 0"/>
-        <path d="M32 58C37 44 46 44 50 52S63 60 68 46"/>
-      </g>
-      <circle cx="68" cy="46" r="4.6" fill="var(--terracota)"/>
-    </svg>
-    <span>Manos Vivas</span>
-  </a>
-
-  <nav class="nav__links" aria-label="Principal">
-    <a href="#lanzamiento">Lanzamiento</a>
-    <a href="#ritual">El ritual</a>
-    <a href="#masajes">Masajes</a>
-    <a href="#historia">Historia</a>
-    <a href="#preguntas">Preguntas</a>
-  </nav>
-
-  <a href="#reservar" class="btn btn--fill btn--sm nav__cta">Reservar</a>
-
-  <button class="nav__burger" data-burger aria-label="Abrir menú" aria-expanded="false">
-    <span></span><span></span>
-  </button>
+<header class="nav" data-nav="">
+<a aria-label="Manos Vivas, inicio" class="nav__logo" href="#inicio">
+<svg aria-hidden="true" viewbox="20 32.5 60 60">
+<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="4.6">
+<path d="M26 58a24 24 0 0 0 48 0"></path>
+<path d="M32 58C37 44 46 44 50 52S63 60 68 46"></path>
+</g>
+<circle cx="68" cy="46" fill="var(--terracota)" r="4.6"></circle>
+</svg>
+<span>Manos Vivas</span>
+</a>
+<nav aria-label="Principal" class="nav__links">
+<a data-t="t000" href="#lanzamiento">Lanzamiento</a>
+<a data-t="t001" href="#ritual">El ritual</a>
+<a data-t="t002" href="#masajes">Masajes</a>
+<a data-t="t003" href="#historia">Historia</a>
+<a data-t="t004" href="#preguntas">Preguntas</a>
+</nav>
+<a class="btn btn--fill btn--sm nav__cta" data-t="t005" href="#reservar">Reservar</a>
+<button aria-expanded="false" aria-label="Abrir menú" class="nav__burger" data-burger="">
+<span></span><span></span>
+</button>
 </header>
-
-<div class="menu" data-menu>
-  <a href="#lanzamiento">Lanzamiento</a>
-  <a href="#ritual">El ritual</a>
-  <a href="#masajes">Masajes</a>
-  <a href="#historia">Historia</a>
-  <a href="#preguntas">Preguntas</a>
-  <a href="#reservar" class="menu__cta">Reservar mi masaje</a>
+<div class="menu" data-menu="">
+<a data-t="t006" href="#lanzamiento">Lanzamiento</a>
+<a data-t="t007" href="#ritual">El ritual</a>
+<a data-t="t008" href="#masajes">Masajes</a>
+<a data-t="t009" href="#historia">Historia</a>
+<a data-t="t010" href="#preguntas">Preguntas</a>
+<a class="menu__cta" data-t="t011" href="#reservar">Reservar mi masaje</a>
 </div>
-
 <main>
-
 <!-- ════════════════════════════════════════════
      PORTADA
      ════════════════════════════════════════════ -->
 <section class="hero" id="inicio">
-
-  <div class="hero__liquid" aria-hidden="true">
-    <span class="blob blob--a"></span>
-    <span class="blob blob--b"></span>
-    <span class="blob blob--c"></span>
-  </div>
-
-  <div class="hero__inner">
-    <p class="kicker rise">Santiago · A domicilio · Desde 2018</p>
-
-    <h1 class="hero__title rise" data-d="1">
-      El bienestar<br />
+<div aria-hidden="true" class="hero__liquid">
+<span class="blob blob--a"></span>
+<span class="blob blob--b"></span>
+<span class="blob blob--c"></span>
+</div>
+<div class="hero__inner">
+<p class="kicker rise" data-t="t012">Santiago · A domicilio · Desde 2018</p>
+<h1 class="hero__title rise" data-d="1" data-t="t013">
+      El bienestar<br/>
       no es <em>negociable</em>.
     </h1>
-
-    <p class="hero__lead rise" data-d="2">
+<p class="hero__lead rise" data-d="2" data-t="t014">
       Masaje profesional en tu casa, a tu hora y a tu manera.
       Sesenta minutos que son sesenta minutos, sin letra chica y sin dolor.
     </p>
-
-    <div class="hero__acts rise" data-d="3">
-      <a href="#lanzamiento" class="btn btn--fill btn--lg">Ver el lanzamiento</a>
-      <a href="#ritual" class="btn btn--ghost btn--lg">Vivir el ritual</a>
-    </div>
-
-    <div class="hero__marks rise" data-d="4">
-      <div><strong>2018</strong><span>Ejerciendo</span></div>
-      <div><strong>Hotelería</strong><span>de lujo</span></div>
-      <div><strong>60 min</strong><span>netos</span></div>
-    </div>
-  </div>
-
-  <a href="#lanzamiento" class="hero__down" aria-label="Bajar"><span></span></a>
-
-  <svg class="wave wave--bottom" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,60 Q240,110 480,70 T960,70 T1440,50 L1440,120 L0,120 Z" fill="#2a2f26"/>
-  </svg>
+<div class="hero__acts rise" data-d="3">
+<a class="btn btn--fill btn--lg" data-t="t015" href="#lanzamiento">Ver el lanzamiento</a>
+<a class="btn btn--ghost btn--lg" data-t="t016" href="#ritual">Vivir el ritual</a>
+</div>
+<div class="hero__marks rise" data-d="4">
+<div><strong>2018</strong><span data-t="t017">Ejerciendo</span></div>
+<div><strong data-t="t018">Hotelería</strong><span data-t="t019">de lujo</span></div>
+<div><strong data-t="t020">60 min</strong><span data-t="t021">netos</span></div>
+</div>
+</div>
+<a aria-label="Bajar" class="hero__down" href="#lanzamiento"><span></span></a>
+<svg aria-hidden="true" class="wave wave--bottom" preserveaspectratio="none" viewbox="0 0 1440 120">
+<path d="M0,60 Q240,110 480,70 T960,70 T1440,50 L1440,120 L0,120 Z" fill="currentColor"></path>
+</svg>
 </section>
-
-
 <!-- ════════════════════════════════════════════
      LANZAMIENTO
      ════════════════════════════════════════════ -->
 <section class="launch" id="lanzamiento">
-  <div class="wrap">
-
-    <header class="head head--mid rise">
-      <p class="kicker kicker--warm">Apertura · Cupos contados</p>
-      <h2>El lanzamiento</h2>
-      <p class="head__lead">
+<div class="wrap">
+<header class="head head--mid rise">
+<p class="kicker kicker--warm" data-t="t022">Apertura · Cupos contados</p>
+<h2 data-t="t023">El lanzamiento</h2>
+<p class="head__lead" data-t="t024">
         Abro con diez personas. No más. Prefiero diez cuerpos que conozco de
         memoria antes que cien nombres en una lista.
       </p>
-    </header>
-
-    <div class="launch__grid">
-
-      <article class="offer rise">
-        <span class="offer__tag">Solo 10 cupos</span>
-
-        <h3 class="offer__name">Pack Apertura</h3>
-        <p class="offer__sub">Cuatro masajes de 60 minutos</p>
-
-        <div class="offer__price">
-          <span class="offer__old">$160.000</span>
-          <span class="offer__new" data-fill>$99.990</span>
-        </div>
-        <p class="offer__unit">Te queda en <strong>$24.997</strong> cada sesión</p>
-
-        <ul class="ticks">
-          <li>4 sesiones de 60 minutos netos</li>
-          <li>El masaje que necesites cada vez</li>
-          <li>Aromaterapia y frecuencias armónicas</li>
-          <li>Tú eliges qué toca tu piel</li>
-          <li>Ficha de salud y seguimiento</li>
-          <li>Agenda a tu ritmo, hasta las 22:00</li>
-        </ul>
-
-        <button class="btn btn--fill btn--block" data-pick="Pack Apertura">
+</header>
+<div class="launch__grid">
+<article class="offer rise">
+<span class="offer__tag" data-t="t025">Solo 10 cupos</span>
+<h3 class="offer__name" data-t="t026">Pack Apertura</h3>
+<p class="offer__sub" data-t="t027">Cuatro masajes de 60 minutos</p>
+<div class="offer__price">
+<span class="offer__old">$160.000</span>
+<span class="offer__new" data-fill="">$99.990</span>
+</div>
+<p class="offer__unit" data-t="t028">Te queda en <strong>$24.997</strong> cada sesión</p>
+<ul class="ticks">
+<li data-t="t029">4 sesiones de 60 minutos netos</li>
+<li data-t="t030">El masaje que necesites cada vez</li>
+<li data-t="t031">Aromaterapia y frecuencias armónicas</li>
+<li data-t="t032">Tú eliges qué toca tu piel</li>
+<li data-t="t033">Ficha de salud y seguimiento</li>
+<li data-t="t034">Agenda a tu ritmo, hasta las 22:00</li>
+</ul>
+<button class="btn btn--fill btn--block" data-pick="Pack Apertura" data-t="t035">
           Tomar un cupo
         </button>
-
-        <p class="offer__fine">Pago único · 3 meses para usarlo</p>
-      </article>
-
-      <aside class="launch__side">
-
-        <div class="panel rise">
-          <p class="panel__label">El precio de apertura termina el 18 de septiembre</p>
-          <div class="clock" data-clock>
-            <div><strong data-cd="d">--</strong><span>días</span></div>
-            <div><strong data-cd="h">--</strong><span>hrs</span></div>
-            <div><strong data-cd="m">--</strong><span>min</span></div>
-            <div><strong data-cd="s">--</strong><span>seg</span></div>
-          </div>
-        </div>
-
-        <div class="panel rise">
-          <div class="jar">
-            <div class="jar__glass">
-              <div class="jar__oil" data-jar-oil>
-                <svg viewBox="0 0 200 30" preserveAspectRatio="none" class="jar__top">
-                  <path d="M0,18 Q25,4 50,18 T100,18 T150,18 T200,18 L200,30 L0,30 Z" fill="currentColor"/>
-                </svg>
-              </div>
-            </div>
-            <div class="jar__read">
-              <strong><span data-taken>0</span> de 10</strong>
-              <span>cupos tomados</span>
-            </div>
-          </div>
-          <p class="panel__note">Se asignan por orden de pago.</p>
-        </div>
-
-        <div class="panel rise">
-          <h4>¿Por qué tan pocos?</h4>
-          <p>
+<p class="offer__fine" data-t="t036">Pago único · 3 meses para usarlo</p>
+</article>
+<aside class="launch__side">
+<div class="panel rise">
+<p class="panel__label" data-t="t037">El precio de apertura termina el 18 de septiembre</p>
+<div class="clock" data-clock="">
+<div><strong data-cd="d">--</strong><span data-t="t038">días</span></div>
+<div><strong data-cd="h">--</strong><span data-t="t039">hrs</span></div>
+<div><strong data-cd="m">--</strong><span data-t="t040">min</span></div>
+<div><strong data-cd="s">--</strong><span data-t="t041">seg</span></div>
+</div>
+</div>
+<div class="panel rise">
+<div class="jar">
+<div class="jar__glass">
+<div class="jar__oil" data-jar-oil="">
+<svg class="jar__top" preserveaspectratio="none" viewbox="0 0 200 30">
+<path d="M0,18 Q25,4 50,18 T100,18 T150,18 T200,18 L200,30 L0,30 Z" fill="currentColor"></path>
+</svg>
+</div>
+</div>
+<div class="jar__read">
+<strong><span data-taken="">0</span> de 10</strong>
+<span data-t="t042">cupos tomados</span>
+</div>
+</div>
+<p class="panel__note" data-t="t043">Se asignan por orden de pago.</p>
+</div>
+<div class="panel rise">
+<h4 data-t="t044">¿Por qué tan pocos?</h4>
+<p data-t="t045">
             Trabajo solo. Cada cupo son cuatro sesiones que quiero dar bien,
             no cuatro sesiones que quiero facturar.
           </p>
-        </div>
-
-      </aside>
-    </div>
-  </div>
-
-  <svg class="wave wave--bottom" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,70 Q300,20 600,60 T1200,55 T1440,75 L1440,120 L0,120 Z" fill="#f7f2ea"/>
-  </svg>
+</div>
+</aside>
+</div>
+</div>
+<svg aria-hidden="true" class="wave wave--bottom" preserveaspectratio="none" viewbox="0 0 1440 120">
+<path d="M0,70 Q300,20 600,60 T1200,55 T1440,75 L1440,120 L0,120 Z" fill="currentColor"></path>
+</svg>
 </section>
-
-
 <!-- ════════════════════════════════════════════
      EL RITUAL · recorrido sensorial
      ════════════════════════════════════════════ -->
 <section class="ritual" id="ritual">
-  <div class="wrap">
-
-    <header class="head head--mid rise">
-      <p class="kicker kicker--warm">Los sesenta minutos</p>
-      <h2>El ritual</h2>
-      <p class="head__lead">
+<div class="wrap">
+<header class="head head--mid rise">
+<p class="kicker kicker--warm" data-t="t046">Los sesenta minutos</p>
+<h2 data-t="t047">El ritual</h2>
+<p class="head__lead" data-t="t048">
         Esto es lo que pasa desde que abro tu puerta hasta que me voy.
       </p>
-    </header>
-
-    <ol class="beats">
-
-      <li class="beat rise">
-        <div class="beat__art" aria-hidden="true">
-          <span class="drip drip--1"></span>
-          <span class="drip drip--2"></span>
-        </div>
-        <div class="beat__txt">
-          <span class="beat__t">00:00</span>
-          <h3>Llego antes que tu hora</h3>
-          <p>
+</header>
+<ol class="beats">
+<li class="beat rise">
+<div aria-hidden="true" class="beat__art">
+<span class="drip drip--1"></span>
+<span class="drip drip--2"></span>
+</div>
+<div class="beat__txt">
+<span class="beat__t" data-t="t049">00:00</span>
+<h3 data-t="t050">Llego antes que tu hora</h3>
+<p data-t="t051">
             Camilla, sábanas limpias, velas, el aroma que elegiste. Instalo
             todo mientras terminas lo que estabas haciendo. Mi tiempo de armado
             no te lo cobro ni te lo descuento.
           </p>
-        </div>
-      </li>
-
-      <li class="beat rise">
-        <div class="beat__art beat__art--warm" aria-hidden="true">
-          <span class="ripple"></span><span class="ripple"></span><span class="ripple"></span>
-        </div>
-        <div class="beat__txt">
-          <span class="beat__t">00:05</span>
-          <h3>Suena algo que no es música de spa</h3>
-          <p>
+</div>
+</li>
+<li class="beat rise">
+<div aria-hidden="true" class="beat__art beat__art--warm">
+<span class="ripple"></span><span class="ripple"></span><span class="ripple"></span>
+</div>
+<div class="beat__txt">
+<span class="beat__t" data-t="t052">00:05</span>
+<h3 data-t="t053">Suena algo que no es música de spa</h3>
+<p data-t="t054">
             Nada de flautas ni ballenas. Frecuencias armónicas que acompañan al
             sistema nervioso en lugar de distraerlo. Si prefieres silencio,
             también es una opción.
           </p>
-        </div>
-      </li>
-
-      <li class="beat rise">
-        <div class="beat__art beat__art--oil" aria-hidden="true">
-          <span class="pour"></span>
-        </div>
-        <div class="beat__txt">
-          <span class="beat__t">00:08</span>
-          <h3>Eliges qué toca tu piel</h3>
-          <p>
+</div>
+</li>
+<li class="beat rise">
+<div aria-hidden="true" class="beat__art beat__art--oil">
+<span class="pour"></span>
+</div>
+<div class="beat__txt">
+<span class="beat__t" data-t="t055">00:08</span>
+<h3 data-t="t056">Eliges qué toca tu piel</h3>
+<p data-t="t057">
             Aceite de coco, crema neutra, algo sin aroma si eres sensible.
             Te pregunto antes, no después. Tu cuerpo, tus reglas.
           </p>
-        </div>
-      </li>
-
-      <li class="beat rise">
-        <div class="beat__art beat__art--deep" aria-hidden="true">
-          <span class="press"></span>
-        </div>
-        <div class="beat__txt">
-          <span class="beat__t">00:10</span>
-          <h3>Empiezan tus sesenta minutos</h3>
-          <p>
+</div>
+</li>
+<li class="beat rise">
+<div aria-hidden="true" class="beat__art beat__art--deep">
+<span class="press"></span>
+</div>
+<div class="beat__txt">
+<span class="beat__t" data-t="t058">00:10</span>
+<h3 data-t="t059">Empiezan tus sesenta minutos</h3>
+<p data-t="t060">
             Aquí arranca tu hora, no antes. Trabajo lo que traes ese día:
             lo que aprieta, lo que duele, lo que no te deja dormir. Firme
             donde hace falta, suave donde corresponde.
           </p>
-        </div>
-      </li>
-
-      <li class="beat rise">
-        <div class="beat__art beat__art--calm" aria-hidden="true">
-          <span class="glow"></span>
-        </div>
-        <div class="beat__txt">
-          <span class="beat__t">01:10</span>
-          <h3>Te quedas donde estás</h3>
-          <p>
+</div>
+</li>
+<li class="beat rise">
+<div aria-hidden="true" class="beat__art beat__art--calm">
+<span class="glow"></span>
+</div>
+<div class="beat__txt">
+<span class="beat__t" data-t="t061">01:10</span>
+<h3 data-t="t062">Te quedas donde estás</h3>
+<p data-t="t063">
             Recojo todo en silencio y me voy. No hay vestidor, no hay sala de
             espera, no hay que manejar de vuelta. Te metes a la cama y al otro
             día te levantas sin dolor.
           </p>
-        </div>
-      </li>
-
-    </ol>
-  </div>
+</div>
+</li>
+</ol>
+</div>
 </section>
-
-
 <!-- ════════════════════════════════════════════
      MANIFIESTO
      ════════════════════════════════════════════ -->
 <section class="creed">
-  <svg class="wave wave--top" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,40 Q360,100 720,50 T1440,45 L1440,0 L0,0 Z" fill="#f7f2ea"/>
-  </svg>
-
-  <div class="wrap">
-    <header class="head head--mid rise">
-      <p class="kicker">Lo que no se negocia</p>
-      <h2>Cómo entiendo yo un masaje</h2>
-    </header>
-
-    <div class="creed__grid">
-      <article class="card rise">
-        <span class="card__n">01</span>
-        <h3>No tiene por qué doler</h3>
-        <p>Basta de romantizar el dolor. Si aprietas los dientes, algo se hizo mal.</p>
-      </article>
-      <article class="card rise">
-        <span class="card__n">02</span>
-        <h3>Sesenta son sesenta</h3>
-        <p>Instalar y ordenar es mi tiempo. Tu hora empieza cuando mis manos te tocan.</p>
-      </article>
-      <article class="card rise">
-        <span class="card__n">03</span>
-        <h3>Sabes quién entra a tu casa</h3>
-        <p>Siempre las mismas manos. Sin ruleta de terapeutas ni desconocidos rotando.</p>
-      </article>
-      <article class="card rise">
-        <span class="card__n">04</span>
-        <h3>Tú eliges qué toca tu piel</h3>
-        <p>Aceite, crema, aroma o nada. Se pregunta antes, no después.</p>
-      </article>
-      <article class="card rise">
-        <span class="card__n">05</span>
-        <h3>Nada de música de ascensor</h3>
-        <p>Frecuencias armónicas que acompañan, no las flautas de siempre.</p>
-      </article>
-      <article class="card rise">
-        <span class="card__n">06</span>
-        <h3>Tu casa es el mejor spa</h3>
-        <p>Terminas, te quedas donde estás. Sin traslados ni salas de espera.</p>
-      </article>
-    </div>
-  </div>
+<svg aria-hidden="true" class="wave wave--top" preserveaspectratio="none" viewbox="0 0 1440 110">
+<path d="M0,40 Q360,100 720,50 T1440,45 L1440,0 L0,0 Z" fill="currentColor"></path>
+</svg>
+<div class="wrap">
+<header class="head head--mid rise">
+<p class="kicker" data-t="t064">Lo que no se negocia</p>
+<h2 data-t="t065">Cómo entiendo yo un masaje</h2>
+</header>
+<div class="creed__grid">
+<article class="card rise">
+<span class="card__n">01</span>
+<h3 data-t="t066">No tiene por qué doler</h3>
+<p data-t="t067">Basta de romantizar el dolor. Si aprietas los dientes, algo se hizo mal.</p>
+</article>
+<article class="card rise">
+<span class="card__n">02</span>
+<h3 data-t="t068">Sesenta son sesenta</h3>
+<p data-t="t069">Instalar y ordenar es mi tiempo. Tu hora empieza cuando mis manos te tocan.</p>
+</article>
+<article class="card rise">
+<span class="card__n">03</span>
+<h3 data-t="t070">Sabes quién entra a tu casa</h3>
+<p data-t="t071">Siempre las mismas manos. Sin ruleta de terapeutas ni desconocidos rotando.</p>
+</article>
+<article class="card rise">
+<span class="card__n">04</span>
+<h3 data-t="t072">Tú eliges qué toca tu piel</h3>
+<p data-t="t073">Aceite, crema, aroma o nada. Se pregunta antes, no después.</p>
+</article>
+<article class="card rise">
+<span class="card__n">05</span>
+<h3 data-t="t074">Nada de música de ascensor</h3>
+<p data-t="t075">Frecuencias armónicas que acompañan, no las flautas de siempre.</p>
+</article>
+<article class="card rise">
+<span class="card__n">06</span>
+<h3 data-t="t076">Tu casa es el mejor spa</h3>
+<p data-t="t077">Terminas, te quedas donde estás. Sin traslados ni salas de espera.</p>
+</article>
+</div>
+</div>
 </section>
-
-
 <!-- ════════════════════════════════════════════
      MASAJES
      ════════════════════════════════════════════ -->
 <section class="menu-s" id="masajes">
-  <div class="wrap">
-
-    <header class="head rise">
-      <p class="kicker kicker--warm">Catálogo</p>
-      <h2>Los masajes</h2>
-      <p class="head__lead">
+<div class="wrap">
+<header class="head rise">
+<p class="kicker kicker--warm" data-t="t078">Catálogo</p>
+<h2 data-t="t079">Los masajes</h2>
+<p class="head__lead" data-t="t080">
         Todos a domicilio y todos personalizables. Si no sabes cuál pedir,
         escríbeme y lo definimos según lo que traiga tu cuerpo ese día.
       </p>
-    </header>
-
-    <div class="svcs">
-
-      <article class="svc rise">
-        <div class="svc__l">
-          <h3>Masaje relajante</h3>
-          <p>Maniobras largas y envolventes para bajar revoluciones. Ideal si duermes mal o andas acelerado.</p>
-          <ul class="tags"><li>Cuerpo completo</li><li>Suave</li><li>Aromaterapia</li></ul>
-        </div>
-        <div class="svc__r">
-          <div class="rowp"><span>30 min</span><strong>$25.000</strong></div>
-          <div class="rowp"><span>60 min</span><strong>$40.000</strong></div>
-          <div class="rowp"><span>60 min · pareja</span><strong>$78.000</strong></div>
-          <button class="btn btn--ghost btn--sm" data-pick="Masaje relajante">Reservar</button>
-        </div>
-      </article>
-
-      <article class="svc rise">
-        <div class="svc__l">
-          <h3>Masaje descontracturante</h3>
-          <p>Trabajo profundo sobre los nudos que ya conoces: cervical, trapecio, lumbar. Firme, sí. Doloroso, no.</p>
-          <ul class="tags"><li>Puntos gatillo</li><li>Media-alta</li><li>Zona a elección</li></ul>
-        </div>
-        <div class="svc__r">
-          <div class="rowp"><span>30 min</span><strong>$30.000</strong></div>
-          <div class="rowp"><span>60 min</span><strong>$45.000</strong></div>
-          <div class="rowp"><span>90 min</span><strong>$55.000</strong></div>
-          <button class="btn btn--ghost btn--sm" data-pick="Masaje descontracturante">Reservar</button>
-        </div>
-      </article>
-
-      <article class="svc rise">
-        <div class="svc__l">
-          <h3>Masaje mixto</h3>
-          <p>Se libera lo que está trabado y se cierra con maniobras suaves, para que te quedes dormido y no adolorido.</p>
-          <ul class="tags"><li>El más pedido</li><li>Cuerpo completo</li><li>Cierre relajante</li></ul>
-        </div>
-        <div class="svc__r">
-          <div class="rowp"><span>30 min</span><strong>$35.000</strong></div>
-          <div class="rowp"><span>60 min</span><strong>$45.000</strong></div>
-          <div class="rowp"><span>90 min</span><strong>$55.000</strong></div>
-          <button class="btn btn--ghost btn--sm" data-pick="Masaje mixto">Reservar</button>
-        </div>
-      </article>
-
-      <article class="svc rise">
-        <div class="svc__l">
-          <h3>Drenaje linfático</h3>
-          <p>Presión suave y rítmica para movilizar líquidos. Se nota en piernas pesadas e hinchazón.</p>
-          <ul class="tags"><li>Muy suave</li><li>Post-operatorio</li><li>Requiere constancia</li></ul>
-        </div>
-        <div class="svc__r">
-          <div class="rowp"><span>60 min · zona</span><strong>$45.000</strong></div>
-          <div class="rowp"><span>90 min · completo</span><strong>$55.000</strong></div>
-          <button class="btn btn--ghost btn--sm" data-pick="Drenaje linfático">Reservar</button>
-        </div>
-      </article>
-
-      <article class="svc rise">
-        <div class="svc__l">
-          <h3>Cérvico craneal</h3>
-          <p>Cráneo, cuello y mandíbula. El que pides cuando la jaqueca lleva días o aprietas los dientes sin notarlo.</p>
-          <ul class="tags"><li>Jaquecas</li><li>Bruxismo</li><li>Sentado o acostado</li></ul>
-        </div>
-        <div class="svc__r">
-          <div class="rowp"><span>30 min</span><strong>$28.000</strong></div>
-          <div class="rowp"><span>60 min</span><strong>$45.000</strong></div>
-          <button class="btn btn--ghost btn--sm" data-pick="Masaje cérvico craneal">Reservar</button>
-        </div>
-      </article>
-
-      <article class="svc rise">
-        <div class="svc__l">
-          <h3>Reflexología</h3>
-          <p>Manos y pies. Parece poco y es de los que más profundo llega: la mayoría se duerme antes de la mitad.</p>
-          <ul class="tags"><li>Pies y manos</li><li>Muy relajante</li><li>Ideal de noche</li></ul>
-        </div>
-        <div class="svc__r">
-          <div class="rowp"><span>30 min</span><strong>$30.000</strong></div>
-          <div class="rowp"><span>60 min</span><strong>$47.000</strong></div>
-          <button class="btn btn--ghost btn--sm" data-pick="Reflexología">Reservar</button>
-        </div>
-      </article>
-
-      <article class="svc rise">
-        <div class="svc__l">
-          <h3>Prenatal</h3>
-          <p>Desde la semana 14, en posición lateral y con cojines. Alivia lumbares, piernas y la tensión de cargar a alguien.</p>
-          <ul class="tags"><li>Desde semana 14</li><li>Lateral</li><li>Autorización médica</li></ul>
-        </div>
-        <div class="svc__r">
-          <div class="rowp"><span>60 min</span><strong>$45.000</strong></div>
-          <div class="rowp"><span>90 min</span><strong>$70.000</strong></div>
-          <button class="btn btn--ghost btn--sm" data-pick="Masaje prenatal">Reservar</button>
-        </div>
-      </article>
-
-      <article class="svc rise">
-        <div class="svc__l">
-          <h3>A tu medida</h3>
-          <p>Cuando ya nos conocemos y sé dónde te aprieta. Armamos la sesión según lo que traigas, sin protocolo fijo.</p>
-          <ul class="tags"><li>Libre</li><li>Con ficha previa</li><li>Para habituales</li></ul>
-        </div>
-        <div class="svc__r">
-          <div class="rowp"><span>30 min</span><strong>$30.000</strong></div>
-          <div class="rowp"><span>60 min</span><strong>$50.000</strong></div>
-          <div class="rowp"><span>90 min</span><strong>$70.000</strong></div>
-          <button class="btn btn--ghost btn--sm" data-pick="Masaje a tu medida">Reservar</button>
-        </div>
-      </article>
-
-    </div>
-
-    <p class="menu-s__foot rise">
+</header>
+<div class="svcs">
+<article class="svc rise">
+<div class="svc__l">
+<h3 data-t="t081">Masaje relajante</h3>
+<p data-t="t082">Maniobras largas y envolventes para bajar revoluciones. Ideal si duermes mal o andas acelerado.</p>
+<ul class="tags"><li data-t="t083">Cuerpo completo</li><li data-t="t084">Suave</li><li data-t="t085">Aromaterapia</li></ul>
+</div>
+<div class="svc__r">
+<div class="rowp"><span data-t="t086">30 min</span><strong>$25.000</strong></div>
+<div class="rowp"><span data-t="t087">60 min</span><strong>$40.000</strong></div>
+<div class="rowp"><span data-t="t088">60 min · pareja</span><strong>$78.000</strong></div>
+<button class="btn btn--ghost btn--sm" data-pick="Masaje relajante" data-t="t089">Reservar</button>
+</div>
+</article>
+<article class="svc rise">
+<div class="svc__l">
+<h3 data-t="t090">Masaje descontracturante</h3>
+<p data-t="t091">Trabajo profundo sobre los nudos que ya conoces: cervical, trapecio, lumbar. Firme, sí. Doloroso, no.</p>
+<ul class="tags"><li data-t="t092">Puntos gatillo</li><li data-t="t093">Media-alta</li><li data-t="t094">Zona a elección</li></ul>
+</div>
+<div class="svc__r">
+<div class="rowp"><span data-t="t095">30 min</span><strong>$30.000</strong></div>
+<div class="rowp"><span data-t="t096">60 min</span><strong>$45.000</strong></div>
+<div class="rowp"><span data-t="t097">90 min</span><strong>$55.000</strong></div>
+<button class="btn btn--ghost btn--sm" data-pick="Masaje descontracturante" data-t="t098">Reservar</button>
+</div>
+</article>
+<article class="svc rise">
+<div class="svc__l">
+<h3 data-t="t099">Masaje mixto</h3>
+<p data-t="t100">Se libera lo que está trabado y se cierra con maniobras suaves, para que te quedes dormido y no adolorido.</p>
+<ul class="tags"><li data-t="t101">El más pedido</li><li data-t="t102">Cuerpo completo</li><li data-t="t103">Cierre relajante</li></ul>
+</div>
+<div class="svc__r">
+<div class="rowp"><span data-t="t104">30 min</span><strong>$35.000</strong></div>
+<div class="rowp"><span data-t="t105">60 min</span><strong>$45.000</strong></div>
+<div class="rowp"><span data-t="t106">90 min</span><strong>$55.000</strong></div>
+<button class="btn btn--ghost btn--sm" data-pick="Masaje mixto" data-t="t107">Reservar</button>
+</div>
+</article>
+<article class="svc rise">
+<div class="svc__l">
+<h3 data-t="t108">Drenaje linfático</h3>
+<p data-t="t109">Presión suave y rítmica para movilizar líquidos. Se nota en piernas pesadas e hinchazón.</p>
+<ul class="tags"><li data-t="t110">Muy suave</li><li data-t="t111">Post-operatorio</li><li data-t="t112">Requiere constancia</li></ul>
+</div>
+<div class="svc__r">
+<div class="rowp"><span data-t="t113">60 min · zona</span><strong>$45.000</strong></div>
+<div class="rowp"><span data-t="t114">90 min · completo</span><strong>$55.000</strong></div>
+<button class="btn btn--ghost btn--sm" data-pick="Drenaje linfático" data-t="t115">Reservar</button>
+</div>
+</article>
+<article class="svc rise">
+<div class="svc__l">
+<h3 data-t="t116">Cérvico craneal</h3>
+<p data-t="t117">Cráneo, cuello y mandíbula. El que pides cuando la jaqueca lleva días o aprietas los dientes sin notarlo.</p>
+<ul class="tags"><li data-t="t118">Jaquecas</li><li data-t="t119">Bruxismo</li><li data-t="t120">Sentado o acostado</li></ul>
+</div>
+<div class="svc__r">
+<div class="rowp"><span data-t="t121">30 min</span><strong>$28.000</strong></div>
+<div class="rowp"><span data-t="t122">60 min</span><strong>$45.000</strong></div>
+<button class="btn btn--ghost btn--sm" data-pick="Masaje cérvico craneal" data-t="t123">Reservar</button>
+</div>
+</article>
+<article class="svc rise">
+<div class="svc__l">
+<h3 data-t="t124">Reflexología</h3>
+<p data-t="t125">Manos y pies. Parece poco y es de los que más profundo llega: la mayoría se duerme antes de la mitad.</p>
+<ul class="tags"><li data-t="t126">Pies y manos</li><li data-t="t127">Muy relajante</li><li data-t="t128">Ideal de noche</li></ul>
+</div>
+<div class="svc__r">
+<div class="rowp"><span data-t="t129">30 min</span><strong>$30.000</strong></div>
+<div class="rowp"><span data-t="t130">60 min</span><strong>$47.000</strong></div>
+<button class="btn btn--ghost btn--sm" data-pick="Reflexología" data-t="t131">Reservar</button>
+</div>
+</article>
+<article class="svc rise">
+<div class="svc__l">
+<h3 data-t="t132">Prenatal</h3>
+<p data-t="t133">Desde la semana 14, en posición lateral y con cojines. Alivia lumbares, piernas y la tensión de cargar a alguien.</p>
+<ul class="tags"><li data-t="t134">Desde semana 14</li><li data-t="t135">Lateral</li><li data-t="t136">Autorización médica</li></ul>
+</div>
+<div class="svc__r">
+<div class="rowp"><span data-t="t137">60 min</span><strong>$45.000</strong></div>
+<div class="rowp"><span data-t="t138">90 min</span><strong>$70.000</strong></div>
+<button class="btn btn--ghost btn--sm" data-pick="Masaje prenatal" data-t="t139">Reservar</button>
+</div>
+</article>
+<article class="svc rise">
+<div class="svc__l">
+<h3 data-t="t140">A tu medida</h3>
+<p data-t="t141">Cuando ya nos conocemos y sé dónde te aprieta. Armamos la sesión según lo que traigas, sin protocolo fijo.</p>
+<ul class="tags"><li data-t="t142">Libre</li><li data-t="t143">Con ficha previa</li><li data-t="t144">Para habituales</li></ul>
+</div>
+<div class="svc__r">
+<div class="rowp"><span data-t="t145">30 min</span><strong>$30.000</strong></div>
+<div class="rowp"><span data-t="t146">60 min</span><strong>$50.000</strong></div>
+<div class="rowp"><span data-t="t147">90 min</span><strong>$70.000</strong></div>
+<button class="btn btn--ghost btn--sm" data-pick="Masaje a tu medida" data-t="t148">Reservar</button>
+</div>
+</article>
+</div>
+<p class="menu-s__foot rise" data-t="t149">
       Todas las sesiones incluyen aromaterapia, frecuencias armónicas y velas.
       Traslado incluido dentro de la zona de cobertura.
     </p>
-  </div>
+</div>
 </section>
-
-
 <!-- ════════════════════════════════════════════
      HISTORIA
      ════════════════════════════════════════════ -->
 <section class="story" id="historia">
-  <svg class="wave wave--top" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,50 Q360,0 720,55 T1440,40 L1440,0 L0,0 Z" fill="#f7f2ea"/>
-  </svg>
-
-  <div class="wrap story__wrap">
-    <div class="story__txt">
-      <p class="kicker kicker--gold rise">La historia</p>
-      <h2 class="rise">De dónde viene esto</h2>
-
-      <p class="rise">
+<svg aria-hidden="true" class="wave wave--top" preserveaspectratio="none" viewbox="0 0 1440 110">
+<path d="M0,50 Q360,0 720,55 T1440,40 L1440,0 L0,0 Z" fill="currentColor"></path>
+</svg>
+<div class="wrap story__wrap">
+<div class="story__txt">
+<p class="kicker kicker--gold rise" data-t="t150">La historia</p>
+<h2 class="rise" data-t="t151">De dónde viene esto</h2>
+<p class="rise" data-t="t152">
         Cuando uno era chico y se pegaba un golpe, la mamá lo sobaba. El
         <em>nanay</em>. No curaba nada en términos médicos y sin embargo
         funcionaba, porque el cuerpo entiende el cariño antes que cualquier
         otra cosa.
       </p>
-
-      <p class="rise">
+<p class="rise" data-t="t153">
         De adultos nos olvidamos de eso. Nos olvidamos del cuerpo, que es el
         templo donde vivimos. Y si la máquina no anda bien, el motor termina
         fallando.
       </p>
-
-      <p class="rise">
+<p class="rise" data-t="t154">
         Soy masoterapeuta desde 2018 y he trabajado en el área de bienestar de
         hotelería de lujo, donde el estándar no se negocia. Ahí aprendí cómo se
         hace bien. Pero también he sido cliente, y he pagado masajes de los que
         me fui pensando «esto no era». Como cocinero al que le sirven mal un
         plato: sabes exactamente qué faltó.
       </p>
-
-      <blockquote class="rise">
-        <p>
+<blockquote class="rise">
+<p data-t="t155">
           Manos Vivas nace de ahí. De querer un masaje de verdad, donde te
           escuchen cuando lo pides. No estoy vendiendo un vaso de agua ni un par
           de zapatillas: estoy vendiendo el bienestar que te da la motivación
           para seguir.
         </p>
-        <footer>Alejandro Bermúdez · Fundador</footer>
-      </blockquote>
-
-      <div class="story__who rise">
-        <div class="story__face" aria-hidden="true">AB</div>
-        <div>
-          <strong>Alejandro Bermúdez</strong>
-          <span>Masoterapeuta · Santiago</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="story__side" aria-hidden="true">
-      <div class="story__mark">
-        <svg viewBox="20 32.5 60 60">
-          <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
-            <path d="M26 58a24 24 0 0 0 48 0"/>
-            <path d="M32 58C37 44 46 44 50 52S63 60 68 46"/>
-          </g>
-          <circle cx="68" cy="46" r="4.6" fill="currentColor"/>
-        </svg>
-      </div>
-    </div>
-  </div>
+<footer data-t="t156">Alejandro Bermúdez · Fundador</footer>
+</blockquote>
+<div class="story__who rise">
+<div aria-hidden="true" class="story__face">AB</div>
+<div>
+<strong data-t="t157">Alejandro Bermúdez</strong>
+<span data-t="t158">Masoterapeuta · Santiago</span>
+</div>
+</div>
+</div>
+<div aria-hidden="true" class="story__side">
+<div class="story__mark">
+<svg viewbox="20 32.5 60 60">
+<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.6">
+<path d="M26 58a24 24 0 0 0 48 0"></path>
+<path d="M32 58C37 44 46 44 50 52S63 60 68 46"></path>
+</g>
+<circle cx="68" cy="46" fill="currentColor" r="4.6"></circle>
+</svg>
+</div>
+</div>
+</div>
 </section>
-
-
 <!-- ════════════════════════════════════════════
      SUSCRIPCIÓN
      ════════════════════════════════════════════ -->
 <section class="subs" id="suscripcion">
-  <div class="wrap">
-    <header class="head head--mid rise">
-      <p class="kicker kicker--warm">Para seguir</p>
-      <h2>Suscripción mensual</h2>
-      <p class="head__lead">
+<div class="wrap">
+<header class="head head--mid rise">
+<p class="kicker kicker--warm" data-t="t159">Para seguir</p>
+<h2 data-t="t160">Suscripción mensual</h2>
+<p class="head__lead" data-t="t161">
         Para quienes ya probaron y no quieren volver a pensarlo. Tu masaje
         queda dentro del gasto del mes, con fecha fija.
       </p>
-    </header>
-
-    <div class="plans">
-      <article class="plan rise">
-        <h3>Esencial</h3>
-        <p class="plan__sub">1 masaje al mes</p>
-        <div class="plan__p">$38.000<span>/mes</span></div>
-        <ul class="ticks ticks--dark">
-          <li>Una sesión de 60 minutos</li>
-          <li>El masaje que necesites ese mes</li>
-          <li>Pausas o cancelas cuando quieras</li>
-        </ul>
-        <button class="btn btn--ghost btn--block" data-pick="Suscripción Esencial">Suscribirme</button>
-      </article>
-
-      <article class="plan plan--best rise">
-        <span class="plan__flag">El equilibrio justo</span>
-        <h3>Bienestar</h3>
-        <p class="plan__sub">2 masajes al mes</p>
-        <div class="plan__p">$70.000<span>/mes</span></div>
-        <ul class="ticks ticks--dark">
-          <li>Dos sesiones de 60 minutos</li>
-          <li>Ahorras $10.000 al mes</li>
-          <li>Prioridad para elegir horario</li>
-          <li>Seguimiento de tu ficha</li>
-        </ul>
-        <button class="btn btn--fill btn--block" data-pick="Suscripción Bienestar">Suscribirme</button>
-      </article>
-
-      <article class="plan rise">
-        <h3>Vital</h3>
-        <p class="plan__sub">4 masajes al mes</p>
-        <div class="plan__p">$130.000<span>/mes</span></div>
-        <ul class="ticks ticks--dark">
-          <li>Una sesión por semana</li>
-          <li>Ahorras $50.000 al mes</li>
-          <li>Prioridad máxima de agenda</li>
-          <li>Un drenaje de regalo al trimestre</li>
-        </ul>
-        <button class="btn btn--ghost btn--block" data-pick="Suscripción Vital">Suscribirme</button>
-      </article>
-    </div>
-
-    <p class="subs__foot rise">
+</header>
+<div class="plans">
+<article class="plan rise">
+<h3 data-t="t162">Esencial</h3>
+<p class="plan__sub" data-t="t163">1 masaje al mes</p>
+<div class="plan__p">$38.000<span data-t="t164">/mes</span></div>
+<ul class="ticks ticks--dark">
+<li data-t="t165">Una sesión de 60 minutos</li>
+<li data-t="t166">El masaje que necesites ese mes</li>
+<li data-t="t167">Pausas o cancelas cuando quieras</li>
+</ul>
+<button class="btn btn--ghost btn--block" data-pick="Suscripción Esencial" data-t="t168">Suscribirme</button>
+</article>
+<article class="plan plan--best rise">
+<span class="plan__flag" data-t="t169">El equilibrio justo</span>
+<h3 data-t="t170">Bienestar</h3>
+<p class="plan__sub" data-t="t171">2 masajes al mes</p>
+<div class="plan__p">$70.000<span data-t="t172">/mes</span></div>
+<ul class="ticks ticks--dark">
+<li data-t="t173">Dos sesiones de 60 minutos</li>
+<li data-t="t174">Ahorras $10.000 al mes</li>
+<li data-t="t175">Prioridad para elegir horario</li>
+<li data-t="t176">Seguimiento de tu ficha</li>
+</ul>
+<button class="btn btn--fill btn--block" data-pick="Suscripción Bienestar" data-t="t177">Suscribirme</button>
+</article>
+<article class="plan rise">
+<h3 data-t="t178">Vital</h3>
+<p class="plan__sub" data-t="t179">4 masajes al mes</p>
+<div class="plan__p">$130.000<span data-t="t180">/mes</span></div>
+<ul class="ticks ticks--dark">
+<li data-t="t181">Una sesión por semana</li>
+<li data-t="t182">Ahorras $50.000 al mes</li>
+<li data-t="t183">Prioridad máxima de agenda</li>
+<li data-t="t184">Un drenaje de regalo al trimestre</li>
+</ul>
+<button class="btn btn--ghost btn--block" data-pick="Suscripción Vital" data-t="t185">Suscribirme</button>
+</article>
+</div>
+<p class="subs__foot rise" data-t="t186">
       Cobro mensual vía MercadoPago. Sin permanencia: avisas por WhatsApp y se pausa.
     </p>
-  </div>
-
-  <svg class="wave wave--bottom" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,60 Q360,110 720,60 T1440,70 L1440,120 L0,120 Z" fill="#f7f2ea"/>
-  </svg>
+</div>
+<svg aria-hidden="true" class="wave wave--bottom" preserveaspectratio="none" viewbox="0 0 1440 120">
+<path d="M0,60 Q360,110 720,60 T1440,70 L1440,120 L0,120 Z" fill="currentColor"></path>
+</svg>
 </section>
-
-
 <!-- ════════════════════════════════════════════
      VOCES
      ════════════════════════════════════════════ -->
 <section class="voices">
-  <div class="wrap">
-    <header class="head head--mid rise">
-      <p class="kicker">Lo que dicen</p>
-      <h2>Quienes ya pasaron por la camilla</h2>
-    </header>
-
-    <!-- Cuando tengas reseñas reales de Google, reemplaza este bloque.
+<div class="wrap">
+<header class="head head--mid rise">
+<p class="kicker" data-t="t187">Lo que dicen</p>
+<h2 data-t="t188">Quienes ya pasaron por la camilla</h2>
+</header>
+<!-- Cuando tengas reseñas reales de Google, reemplaza este bloque.
          Mejor vacío y honesto que con testimonios inventados. -->
-    <div class="soon rise">
-      <p>
+<div class="soon rise">
+<p data-t="t189">
         Estoy recién abriendo. Cuando las primeras diez personas terminen su
         pack, aquí van a estar sus palabras — las de verdad, con nombre y
         enlace a Google.
       </p>
-      <p class="soon__cta">¿Ya te atendí? <a href="#" data-review>Déjame tu reseña aquí</a></p>
-    </div>
-  </div>
+<p class="soon__cta">¿Ya te atendí? <a data-review="" data-t="t190" href="#">Déjame tu reseña aquí</a></p>
+</div>
+</div>
 </section>
-
-
 <!-- ════════════════════════════════════════════
      PREGUNTAS
      ════════════════════════════════════════════ -->
 <section class="faq" id="preguntas">
-  <div class="wrap wrap--slim">
-    <header class="head head--mid rise">
-      <p class="kicker kicker--warm">Antes de reservar</p>
-      <h2>Preguntas frecuentes</h2>
-    </header>
-
-    <div class="qas">
-      <details class="qa rise">
-        <summary><i>01</i> ¿Qué necesito tener en mi casa?</summary>
-        <div class="qa__b"><p>Un espacio de unos dos por tres metros y un enchufe cerca. Llevo camilla, sábanas limpias, aceites, aromas, velas y la música.</p></div>
-      </details>
-
-      <details class="qa rise">
-        <summary><i>02</i> ¿De verdad no duele?</summary>
-        <div class="qa__b"><p>No. Un masaje es un momento de desconexión, no una prueba de resistencia. Si hay una zona muy trabada puede haber molestia puntual, siempre avisada y con tu permiso.</p></div>
-      </details>
-
-      <details class="qa rise">
-        <summary><i>03</i> Tengo una operación o lesión. ¿Puedo?</summary>
-        <div class="qa__b"><p>En la mayoría de los casos sí, adaptando la sesión. Antes de la primera vez llenamos una ficha simple: cirugías, hernias, escoliosis, embarazo. Si algo requiere autorización médica, te lo digo con franqueza.</p></div>
-      </details>
-
-      <details class="qa rise">
-        <summary><i>04</i> ¿Cómo pago?</summary>
-        <div class="qa__b"><p>En línea con MercadoPago: crédito, débito, cuotas o saldo. Pagas al reservar y el bloque queda tomado.</p></div>
-      </details>
-
-      <details class="qa rise">
-        <summary><i>05</i> ¿Y si me tengo que cancelar?</summary>
-        <div class="qa__b">
-          <p>Avisando con <strong>12 horas</strong>, el valor no se pierde: queda como saldo a tu favor y lo usas dentro de 3 meses. Con menos de 12 horas o sin aviso, la sesión se considera realizada.</p>
-          <p>Los cambios de horario se piden con 24 horas.</p>
-        </div>
-      </details>
-
-      <details class="qa rise">
-        <summary><i>06</i> ¿Hasta qué hora atiendes?</summary>
-        <div class="qa__b"><p>Hasta las 22:00. Si quieres tu masaje un jueves a las 21:00 para meterte a la cama después, ese es exactamente el punto de trabajar a domicilio.</p></div>
-      </details>
-
-      <details class="qa rise">
-        <summary><i>07</i> ¿A qué comunas llegas?</summary>
-        <div class="qa__b"><p>Cubro el sector oriente de Santiago sin costo adicional. Para otras comunas escríbeme y vemos disponibilidad y traslado.</p></div>
-      </details>
-
-      <details class="qa rise">
-        <summary><i>08</i> ¿Puedo regalar un masaje?</summary>
-        <div class="qa__b"><p>Sí. Escríbeme y armamos el regalo: te mando un certificado digital con el nombre de quien lo recibe, y esa persona agenda cuando quiera dentro de 3 meses.</p></div>
-      </details>
-    </div>
-  </div>
+<div class="wrap wrap--slim">
+<header class="head head--mid rise">
+<p class="kicker kicker--warm" data-t="t191">Antes de reservar</p>
+<h2 data-t="t192">Preguntas frecuentes</h2>
+</header>
+<div class="qas">
+<details class="qa rise">
+<summary data-t="t193"><i>01</i> ¿Qué necesito tener en mi casa?</summary>
+<div class="qa__b"><p data-t="t194">Un espacio de unos dos por tres metros y un enchufe cerca. Llevo camilla, sábanas limpias, aceites, aromas, velas y la música.</p></div>
+</details>
+<details class="qa rise">
+<summary data-t="t195"><i>02</i> ¿De verdad no duele?</summary>
+<div class="qa__b"><p data-t="t196">No. Un masaje es un momento de desconexión, no una prueba de resistencia. Si hay una zona muy trabada puede haber molestia puntual, siempre avisada y con tu permiso.</p></div>
+</details>
+<details class="qa rise">
+<summary data-t="t197"><i>03</i> Tengo una operación o lesión. ¿Puedo?</summary>
+<div class="qa__b"><p data-t="t198">En la mayoría de los casos sí, adaptando la sesión. Antes de la primera vez llenamos una ficha simple: cirugías, hernias, escoliosis, embarazo. Si algo requiere autorización médica, te lo digo con franqueza.</p></div>
+</details>
+<details class="qa rise">
+<summary data-t="t199"><i>04</i> ¿Cómo pago?</summary>
+<div class="qa__b"><p data-t="t200">En línea con MercadoPago: crédito, débito, cuotas o saldo. Pagas al reservar y el bloque queda tomado.</p></div>
+</details>
+<details class="qa rise">
+<summary data-t="t201"><i>05</i> ¿Y si me tengo que cancelar?</summary>
+<div class="qa__b">
+<p data-t="t202">Avisando con <strong data-t="t203">12 horas</strong>, el valor no se pierde: queda como saldo a tu favor y lo usas dentro de 3 meses. Con menos de 12 horas o sin aviso, la sesión se considera realizada.</p>
+<p data-t="t204">Los cambios de horario se piden con 24 horas.</p>
+</div>
+</details>
+<details class="qa rise">
+<summary data-t="t205"><i>06</i> ¿Hasta qué hora atiendes?</summary>
+<div class="qa__b"><p data-t="t206">Hasta las 22:00. Si quieres tu masaje un jueves a las 21:00 para meterte a la cama después, ese es exactamente el punto de trabajar a domicilio.</p></div>
+</details>
+<details class="qa rise">
+<summary data-t="t207"><i>07</i> ¿A qué comunas llegas?</summary>
+<div class="qa__b"><p data-t="t208">Cubro el sector oriente de Santiago sin costo adicional. Para otras comunas escríbeme y vemos disponibilidad y traslado.</p></div>
+</details>
+<details class="qa rise">
+<summary data-t="t209"><i>08</i> ¿Puedo regalar un masaje?</summary>
+<div class="qa__b"><p data-t="t210">Sí. Escríbeme y armamos el regalo: te mando un certificado digital con el nombre de quien lo recibe, y esa persona agenda cuando quiera dentro de 3 meses.</p></div>
+</details>
+</div>
+</div>
 </section>
-
-
 <!-- ════════════════════════════════════════════
      RESERVAR
      ════════════════════════════════════════════ -->
 <section class="book" id="reservar">
-  <svg class="wave wave--top" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,45 Q360,105 720,45 T1440,55 L1440,0 L0,0 Z" fill="#f7f2ea"/>
-  </svg>
-
-  <div class="wrap wrap--slim">
-    <header class="head head--mid rise">
-      <p class="kicker kicker--gold">Último paso</p>
-      <h2>Reserva tu masaje</h2>
-      <p class="head__lead">
+<svg aria-hidden="true" class="wave wave--top" preserveaspectratio="none" viewbox="0 0 1440 110">
+<path d="M0,45 Q360,105 720,45 T1440,55 L1440,0 L0,0 Z" fill="currentColor"></path>
+</svg>
+<div class="wrap wrap--slim">
+<header class="head head--mid rise">
+<p class="kicker kicker--gold" data-t="t211">Último paso</p>
+<h2 data-t="t212">Reserva tu masaje</h2>
+<p class="head__lead" data-t="t213">
         Pagas primero para asegurar el bloque, y enseguida eliges día y hora.
       </p>
-    </header>
-
-    <div class="book__card rise">
-
-      <div class="step">
-        <span class="step__n">1</span>
-        <div class="step__b">
-          <h3>¿Qué quieres reservar?</h3>
-          <select class="field" data-service>
-            <option value="">Elige una opción</option>
-            <optgroup label="Lanzamiento">
-              <option data-p="99990">Pack Apertura — 4 masajes — $99.990</option>
-            </optgroup>
-            <optgroup label="Sesiones individuales">
-              <option data-p="40000">Masaje relajante 60 min — $40.000</option>
-              <option data-p="45000">Masaje descontracturante 60 min — $45.000</option>
-              <option data-p="45000">Masaje mixto 60 min — $45.000</option>
-              <option data-p="45000">Drenaje linfático 60 min — $45.000</option>
-              <option data-p="45000">Cérvico craneal 60 min — $45.000</option>
-              <option data-p="47000">Reflexología 60 min — $47.000</option>
-              <option data-p="45000">Prenatal 60 min — $45.000</option>
-              <option data-p="50000">A tu medida 60 min — $50.000</option>
-              <option data-p="78000">Relajante en pareja 60 min — $78.000</option>
-            </optgroup>
-            <optgroup label="Suscripción mensual">
-              <option data-p="38000">Plan Esencial — $38.000/mes</option>
-              <option data-p="70000">Plan Bienestar — $70.000/mes</option>
-              <option data-p="130000">Plan Vital — $130.000/mes</option>
-            </optgroup>
-          </select>
-
-          <div class="tot" data-total hidden>
-            <span>Total a pagar</span>
-            <strong data-total-n>—</strong>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step__n">2</span>
-        <div class="step__b">
-          <h3>Paga en línea</h3>
-          <p class="step__h">Se abre MercadoPago en otra pestaña. Vuelve aquí cuando termines.</p>
-          <a href="https://link.mercadopago.cl/manosvivas" target="_blank" rel="noopener"
-             class="btn btn--fill btn--block" data-pay>Pagar con MercadoPago</a>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step__n">3</span>
-        <div class="step__b">
-          <h3>Elige día y hora</h3>
-          <p class="step__h">Bloques disponibles hasta las 22:00, todos los días.</p>
-          <a href="https://calendly.com/manosvivas" target="_blank" rel="noopener"
-             class="btn btn--ghost btn--block" data-calendar>Abrir el calendario</a>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step__n">4</span>
-        <div class="step__b">
-          <h3>Hablamos antes</h3>
-          <p class="step__h">Mándame el comprobante y conversamos tu ficha: lesiones, preferencias, qué aceite quieres.</p>
-          <a href="https://wa.me/56995742775?text=Hola%20Alejandro%2C%20acabo%20de%20reservar%20en%20Manos%20Vivas"
-             target="_blank" rel="noopener" class="btn btn--wsp btn--block" data-wsp-book>
+</header>
+<div class="book__card rise">
+<div class="step">
+<span class="step__n">1</span>
+<div class="step__b">
+<h3 data-t="t214">¿Qué quieres reservar?</h3>
+<select class="field" data-service="">
+<option data-t="t215" value="">Elige una opción</option>
+<optgroup label="Lanzamiento">
+<option data-p="99990" data-t="t216">Pack Apertura — 4 masajes — $99.990</option>
+</optgroup>
+<optgroup label="Sesiones individuales">
+<option data-p="40000" data-t="t217">Masaje relajante 60 min — $40.000</option>
+<option data-p="45000" data-t="t218">Masaje descontracturante 60 min — $45.000</option>
+<option data-p="45000" data-t="t219">Masaje mixto 60 min — $45.000</option>
+<option data-p="45000" data-t="t220">Drenaje linfático 60 min — $45.000</option>
+<option data-p="45000" data-t="t221">Cérvico craneal 60 min — $45.000</option>
+<option data-p="47000" data-t="t222">Reflexología 60 min — $47.000</option>
+<option data-p="45000" data-t="t223">Prenatal 60 min — $45.000</option>
+<option data-p="50000" data-t="t224">A tu medida 60 min — $50.000</option>
+<option data-p="78000" data-t="t225">Relajante en pareja 60 min — $78.000</option>
+</optgroup>
+<optgroup label="Suscripción mensual">
+<option data-p="38000" data-t="t226">Plan Esencial — $38.000/mes</option>
+<option data-p="70000" data-t="t227">Plan Bienestar — $70.000/mes</option>
+<option data-p="130000" data-t="t228">Plan Vital — $130.000/mes</option>
+</optgroup>
+</select>
+<div class="tot" data-total="" hidden="">
+<span data-t="t229">Total a pagar</span>
+<strong data-total-n="">—</strong>
+</div>
+</div>
+</div>
+<div class="step">
+<span class="step__n">2</span>
+<div class="step__b">
+<h3 data-t="t230">Paga en línea</h3>
+<p class="step__h" data-t="t231">Se abre MercadoPago en otra pestaña. Vuelve aquí cuando termines.</p>
+<a class="btn btn--fill btn--block" data-pay="" data-t="t232" href="https://link.mercadopago.cl/manosvivas" rel="noopener" target="_blank">Pagar con MercadoPago</a>
+</div>
+</div>
+<div class="step">
+<span class="step__n">3</span>
+<div class="step__b">
+<h3 data-t="t233">Elige día y hora</h3>
+<p class="step__h" data-t="t234">Bloques disponibles hasta las 22:00, todos los días.</p>
+<a class="btn btn--ghost btn--block" data-calendar="" data-t="t235" href="https://calendly.com/manosvivas" rel="noopener" target="_blank">Abrir el calendario</a>
+</div>
+</div>
+<div class="step">
+<span class="step__n">4</span>
+<div class="step__b">
+<h3 data-t="t236">Hablamos antes</h3>
+<p class="step__h" data-t="t237">Mándame el comprobante y conversamos tu ficha: lesiones, preferencias, qué aceite quieres.</p>
+<a class="btn btn--wsp btn--block" data-t="t238" data-wsp-book="" href="https://wa.me/56995742775?text=Hola%20Alejandro%2C%20acabo%20de%20reservar%20en%20Manos%20Vivas" rel="noopener" target="_blank">
             Escribirme por WhatsApp
           </a>
-        </div>
-      </div>
-
-    </div>
-  </div>
+</div>
+</div>
+</div>
+</div>
 </section>
-
 </main>
-
-
 <!-- ════════════════════════════════════════════
      PIE
      ════════════════════════════════════════════ -->
 <footer class="foot">
-  <div class="wrap foot__top">
-    <div class="foot__brand">
-      <svg viewBox="20 32.5 60 60" aria-hidden="true">
-        <g fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="round">
-          <path d="M26 58a24 24 0 0 0 48 0"/>
-          <path d="M32 58C37 44 46 44 50 52S63 60 68 46"/>
-        </g>
-        <circle cx="68" cy="46" r="4.6" fill="var(--dorado)"/>
-      </svg>
-      <div>
-        <strong>Manos Vivas</strong>
-        <span>El bienestar no es negociable</span>
-      </div>
-    </div>
-
-    <nav class="foot__nav" aria-label="Pie">
-      <a href="#lanzamiento">Lanzamiento</a>
-      <a href="#ritual">El ritual</a>
-      <a href="#masajes">Masajes</a>
-      <a href="#suscripcion">Suscripción</a>
-      <a href="#preguntas">Preguntas</a>
-      <a href="#condiciones">Condiciones</a>
-    </nav>
-
-    <div class="foot__c">
-      <a href="https://wa.me/56995742775" target="_blank" rel="noopener">+56 9 9574 2775</a>
-      <a href="#" data-instagram target="_blank" rel="noopener">Instagram</a>
-      <span>Santiago de Chile</span>
-    </div>
-  </div>
-
-  <div class="wrap terms" id="condiciones">
-    <h3>Condiciones del servicio</h3>
-    <div class="terms__g">
-      <div><h4>Vigencia</h4><p>El Pack Apertura y los certificados de regalo se usan dentro de 3 meses desde la compra.</p></div>
-      <div><h4>Cambios</h4><p>Cancelas con 12 horas y el valor queda a tu favor. Cambios de horario, con 24 horas.</p></div>
-      <div><h4>Puntualidad</h4><p>Llego 15 minutos antes. Si el atraso es tuyo, la sesión termina a la hora agendada.</p></div>
-      <div><h4>Salud</h4><p>Debes informar condiciones médicas antes de la sesión. Algunos casos requieren autorización médica.</p></div>
-    </div>
-  </div>
-
-  <p class="foot__legal">© 2026 Manos Vivas · Alejandro Bermúdez · Santiago de Chile</p>
+<div class="wrap foot__top">
+<div class="foot__brand">
+<svg aria-hidden="true" viewbox="20 32.5 60 60">
+<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="4.6">
+<path d="M26 58a24 24 0 0 0 48 0"></path>
+<path d="M32 58C37 44 46 44 50 52S63 60 68 46"></path>
+</g>
+<circle cx="68" cy="46" fill="var(--dorado)" r="4.6"></circle>
+</svg>
+<div>
+<strong>Manos Vivas</strong>
+<span>El bienestar no es negociable</span>
+</div>
+</div>
+<nav aria-label="Pie" class="foot__nav">
+<a data-t="t239" href="#lanzamiento">Lanzamiento</a>
+<a data-t="t240" href="#ritual">El ritual</a>
+<a data-t="t241" href="#masajes">Masajes</a>
+<a data-t="t242" href="#suscripcion">Suscripción</a>
+<a data-t="t243" href="#preguntas">Preguntas</a>
+<a data-t="t244" href="#condiciones">Condiciones</a>
+</nav>
+<div class="foot__c">
+<a href="https://wa.me/56995742775" rel="noopener" target="_blank">+56 9 9574 2775</a>
+<a data-instagram="" data-t="t245" href="#" rel="noopener" target="_blank">Instagram</a>
+<span data-t="t246">Santiago de Chile</span>
+</div>
+</div>
+<div class="wrap terms" id="condiciones">
+<h3 data-t="t247">Condiciones del servicio</h3>
+<div class="terms__g">
+<div><h4 data-t="t248">Vigencia</h4><p data-t="t249">El Pack Apertura y los certificados de regalo se usan dentro de 3 meses desde la compra.</p></div>
+<div><h4 data-t="t250">Cambios</h4><p data-t="t251">Cancelas con 12 horas y el valor queda a tu favor. Cambios de horario, con 24 horas.</p></div>
+<div><h4 data-t="t252">Puntualidad</h4><p data-t="t253">Llego 15 minutos antes. Si el atraso es tuyo, la sesión termina a la hora agendada.</p></div>
+<div><h4 data-t="t254">Salud</h4><p data-t="t255">Debes informar condiciones médicas antes de la sesión. Algunos casos requieren autorización médica.</p></div>
+</div>
+</div>
+<p class="foot__legal" data-t="t256">© 2026 Manos Vivas · Alejandro Bermúdez · Santiago de Chile</p>
 </footer>
-
-<a class="wsp" href="https://wa.me/56995742775?text=Hola%20Alejandro%2C%20quiero%20saber%20m%C3%A1s%20de%20Manos%20Vivas"
-   target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path fill="currentColor" d="M17.5 14.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5 1.9.8 2.6.9 3.5.7.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.5-.4z"/>
-    <path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2z"/>
-  </svg>
+<a aria-label="Escribir por WhatsApp" class="wsp" href="https://wa.me/56995742775?text=Hola%20Alejandro%2C%20quiero%20saber%20m%C3%A1s%20de%20Manos%20Vivas" rel="noopener" target="_blank">
+<svg aria-hidden="true" viewbox="0 0 24 24">
+<path d="M17.5 14.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5 1.9.8 2.6.9 3.5.7.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.5-.4z" fill="currentColor"></path>
+<path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2z" fill="currentColor"></path>
+</svg>
 </a>
-
-<script defer src="script.js?v=20260830"></script>
+<script defer="" src="idiomas.js?v=20260830"></script>
+<script defer="" src="fondo.js?v=20260830"></script>
+<script defer="" src="script.js?v=20260830"></script>
 </body>
 </html>

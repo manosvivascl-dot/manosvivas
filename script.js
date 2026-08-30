@@ -278,8 +278,244 @@ window.__MANOS_VIVAS__ = {
   }
 
 
+
+  /* ── Preferencias: idioma, modo, texto y sonido ───────── */
+
+  var PREF = {
+    leer: function (clave, porDefecto) {
+      try { return localStorage.getItem('mv_' + clave) || porDefecto; }
+      catch (e) { return porDefecto; }
+    },
+    guardar: function (clave, valor) {
+      try { localStorage.setItem('mv_' + clave, valor); } catch (e) {}
+    }
+  };
+
+
+  /* ── Idiomas ──────────────────────────────────────────── */
+  function iniciarIdiomas() {
+    var DICC = window.__IDIOMAS__;
+    if (!DICC) return;
+
+    var botones = $$('[data-lang]');
+
+    function aplicar(idioma) {
+      var d = DICC[idioma];
+      if (!d) return;
+
+      // Textos de la página
+      $$('[data-t]').forEach(function (el) {
+        var clave = el.getAttribute('data-t');
+        if (d[clave] != null) el.innerHTML = d[clave];
+      });
+
+      // Etiquetas para lectores de pantalla
+      $$('[data-t-label]').forEach(function (el) {
+        var clave = el.getAttribute('data-t-label');
+        if (d[clave]) el.setAttribute('aria-label', d[clave]);
+      });
+
+      // Cabecera del documento
+      if (d['doc.titulo']) document.title = d['doc.titulo'];
+      var meta = $('meta[name="description"]');
+      if (meta && d['doc.desc']) meta.setAttribute('content', d['doc.desc']);
+
+      document.documentElement.setAttribute('lang', idioma);
+
+      botones.forEach(function (b) {
+        var suyo = b.getAttribute('data-lang') === idioma;
+        b.classList.toggle('is-on', suyo);
+        b.setAttribute('aria-pressed', String(suyo));
+      });
+
+      PREF.guardar('idioma', idioma);
+
+      // El menú puede haber cambiado de largo
+      refrescarEtiquetaMenu(d);
+    }
+
+    botones.forEach(function (b) {
+      b.addEventListener('click', function () {
+        aplicar(b.getAttribute('data-lang'));
+      });
+    });
+
+    // Idioma guardado, o el del navegador, o español
+    var guardado = PREF.leer('idioma', null);
+    if (!guardado) {
+      var nav = (navigator.language || 'es').slice(0, 2).toLowerCase();
+      guardado = DICC[nav] ? nav : 'es';
+    }
+    if (guardado !== 'es') aplicar(guardado);
+    else aplicar('es');
+  }
+
+  function refrescarEtiquetaMenu(d) {
+    var boton = $('[data-burger]');
+    if (!boton || !d) return;
+    var abierto = boton.getAttribute('aria-expanded') === 'true';
+    var clave = abierto ? 'a11y.menuCerrar' : 'a11y.menu';
+    if (d[clave]) boton.setAttribute('aria-label', d[clave]);
+  }
+
+
+  /* ── Modo día y noche ─────────────────────────────────── */
+  function iniciarModo() {
+    var boton = $('[data-modo-btn]');
+    var raiz = document.documentElement;
+
+    function aplicar(modo) {
+      raiz.setAttribute('data-modo', modo);
+      if (boton) boton.setAttribute('aria-pressed', String(modo === 'noche'));
+
+      var meta = $('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', modo === 'noche' ? '#1a1d17' : '#f7f2ea');
+
+      PREF.guardar('modo', modo);
+    }
+
+    // Preferencia guardada, o la del sistema
+    var guardado = PREF.leer('modo', null);
+    if (!guardado) {
+      var oscuro = window.matchMedia &&
+                   window.matchMedia('(prefers-color-scheme: dark)').matches;
+      guardado = oscuro ? 'noche' : 'dia';
+    }
+    aplicar(guardado);
+
+    if (boton) {
+      boton.addEventListener('click', function () {
+        aplicar(raiz.getAttribute('data-modo') === 'noche' ? 'dia' : 'noche');
+      });
+    }
+  }
+
+
+  /* ── Tamaño del texto ─────────────────────────────────── */
+  function iniciarTexto() {
+    var PASOS = [100, 112, 125, 140];
+    var raiz = document.documentElement;
+
+    var actual = parseInt(PREF.leer('texto', '100'), 10);
+    if (PASOS.indexOf(actual) === -1) actual = 100;
+
+    function aplicar(valor) {
+      actual = valor;
+      raiz.style.fontSize = valor + '%';
+      PREF.guardar('texto', String(valor));
+
+      $$('[data-texto]').forEach(function (b) {
+        var esMas = b.getAttribute('data-texto') === 'mas';
+        b.disabled = esMas ? (valor === PASOS[PASOS.length - 1]) : (valor === PASOS[0]);
+      });
+    }
+
+    aplicar(actual);
+
+    $$('[data-texto]').forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        var i = PASOS.indexOf(actual);
+        var siguiente = boton.getAttribute('data-texto') === 'mas' ? i + 1 : i - 1;
+        if (siguiente >= 0 && siguiente < PASOS.length) aplicar(PASOS[siguiente]);
+      });
+    });
+  }
+
+
+  /* ── Sonido ambiental ─────────────────────────────────── */
+  function iniciarSonido() {
+    var boton = $('[data-sonido-btn]');
+    if (!boton) return;
+
+    var audio = null, maestro = null, voces = [], sonando = false;
+
+    function construir() {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return false;
+
+      audio = new AC();
+      maestro = audio.createGain();
+      maestro.gain.value = 0;
+      maestro.connect(audio.destination);
+
+      // Un acorde muy suave y grave, casi un cuenco tibetano
+      [110, 164.81, 220, 329.63].forEach(function (hz, i) {
+        var osc = audio.createOscillator();
+        var vol = audio.createGain();
+        var vaiven = audio.createOscillator();
+        var prof = audio.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.value = hz;
+
+        // Cada voz respira a su propio ritmo
+        vaiven.frequency.value = 0.045 + i * 0.021;
+        prof.gain.value = 0.32;
+        vaiven.connect(prof);
+        prof.connect(vol.gain);
+
+        vol.gain.value = 0.42 / (i + 1.4);
+
+        osc.connect(vol);
+        vol.connect(maestro);
+
+        osc.start();
+        vaiven.start();
+        voces.push(osc, vaiven);
+      });
+
+      return true;
+    }
+
+    function subir() {
+      if (!audio && !construir()) return;
+      if (audio.state === 'suspended') audio.resume();
+      maestro.gain.cancelScheduledValues(audio.currentTime);
+      maestro.gain.setTargetAtTime(0.055, audio.currentTime, 1.6);
+      sonando = true;
+    }
+
+    function bajar() {
+      if (!maestro) return;
+      maestro.gain.cancelScheduledValues(audio.currentTime);
+      maestro.gain.setTargetAtTime(0, audio.currentTime, 0.9);
+      sonando = false;
+    }
+
+    function pintar() {
+      boton.setAttribute('aria-pressed', String(sonando));
+      boton.classList.toggle('is-on', sonando);
+
+      var d = window.__IDIOMAS__ && window.__IDIOMAS__[document.documentElement.lang];
+      if (d) {
+        var clave = sonando ? 'a11y.sonidoOff' : 'a11y.sonido';
+        if (d[clave]) boton.setAttribute('aria-label', d[clave]);
+      }
+    }
+
+    boton.addEventListener('click', function () {
+      if (sonando) bajar(); else subir();
+      pintar();
+      PREF.guardar('sonido', sonando ? 'si' : 'no');
+    });
+
+    // Nunca arranca solo: siempre requiere que la persona lo pida
+    pintar();
+
+    // Al cambiar de pestaña, se calla
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden && sonando && audio) audio.suspend();
+      else if (!document.hidden && sonando && audio) audio.resume();
+    });
+  }
+
+
   /* ── Arranque ─────────────────────────────────────────── */
   function arrancar() {
+    safe(iniciarModo,        'modo');
+    safe(iniciarTexto,       'texto');
+    safe(iniciarIdiomas,     'idiomas');
+    safe(iniciarSonido,      'sonido');
     safe(iniciarApertura,    'apertura');
     safe(iniciarNav,         'nav');
     safe(iniciarMenu,        'menu');
