@@ -1,26 +1,35 @@
 /* ═══════════════════════════════════════════════════════════
    MANOS VIVAS
 
-   ⬇⬇⬇  ESTO ES LO ÚNICO QUE NECESITAS EDITAR TÚ  ⬇⬇⬇
-   Cambia los valores entre comillas y guarda. Nada más.
+   ⬇⬇⬇  LO ÚNICO QUE NECESITAS EDITAR TÚ  ⬇⬇⬇
+   Cambia los valores, guarda el archivo y listo.
    ═══════════════════════════════════════════════════════════ */
 
-const CONFIG = {
+window.__MANOS_VIVAS__ = {
 
-  // Cuántos cupos del Pack Apertura ya vendiste (0 a 10).
-  // Actualízalo cada vez que alguien compre.
+  // Cupos del Pack Apertura que ya vendiste (de 0 a 10).
+  // El frasco de aceite de la web se llena solo según este número.
   cuposVendidos: 0,
 
   // Total de cupos del lanzamiento.
   cuposTotales: 10,
 
-  // Hasta cuándo dura el precio de lanzamiento (año, mes, día).
-  // OJO: el mes va del 0 al 11 → enero es 0, septiembre es 8.
+  // Hasta cuándo dura el precio de apertura (año, mes, día, hora, minuto).
+  // OJO con el mes: enero es 0, así que septiembre es 8.
   finLanzamiento: new Date(2026, 8, 18, 23, 59),
 
-  // Tu enlace para que la gente deje reseñas en Google.
-  // Lo obtienes creando tu Perfil de Empresa en Google.
-  enlaceResenas: 'https://g.page/r/TU-CODIGO-DE-GOOGLE/review',
+  // Tu enlace para que la gente te deje reseñas en Google.
+  // Lo consigues creando tu Perfil de Empresa en Google.
+  enlaceResenas: 'https://g.page/r/TU-CODIGO/review',
+
+  // Tu enlace de Calendly para que elijan día y hora.
+  enlaceCalendario: 'https://calendly.com/manosvivas',
+
+  // Tu enlace de cobro de MercadoPago.
+  enlacePago: 'https://link.mercadopago.cl/manosvivas',
+
+  // Tu Instagram (la dirección completa).
+  instagram: 'https://instagram.com/manosvivas',
 
   // Tu WhatsApp, sin el signo + ni espacios.
   whatsapp: '56995742775'
@@ -30,184 +39,261 @@ const CONFIG = {
    ⬆⬆⬆  DE AQUÍ HACIA ABAJO NO HACE FALTA TOCAR NADA  ⬆⬆⬆
    ═══════════════════════════════════════════════════════════ */
 
+(function () {
+  'use strict';
 
-/* ── Barra de navegación al hacer scroll ─────────────────── */
-const nav = document.getElementById('nav');
-let ultimoScroll = 0;
+  var CFG = window.__MANOS_VIVAS__;
 
-function alHacerScroll() {
-  const y = window.scrollY;
-  nav.classList.toggle('is-stuck', y > 24);
-  ultimoScroll = y;
-}
-window.addEventListener('scroll', alHacerScroll, { passive: true });
-alHacerScroll();
-
-
-/* ── Menú en el celular ──────────────────────────────────── */
-const burger = document.getElementById('burger');
-const menu = document.getElementById('menu');
-
-burger.addEventListener('click', () => {
-  const abierto = menu.classList.toggle('is-open');
-  burger.setAttribute('aria-expanded', String(abierto));
-  burger.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
-  document.body.style.overflow = abierto ? 'hidden' : '';
-});
-
-menu.querySelectorAll('a').forEach(enlace => {
-  enlace.addEventListener('click', () => {
-    menu.classList.remove('is-open');
-    burger.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-  });
-});
-
-
-/* ── Aparición suave al hacer scroll ─────────────────────── */
-const observador = new IntersectionObserver((entradas) => {
-  entradas.forEach(entrada => {
-    if (entrada.isIntersecting) {
-      entrada.target.classList.add('is-in');
-      observador.unobserve(entrada.target);
-    }
-  });
-}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-
-document.querySelectorAll('.reveal').forEach(el => observador.observe(el));
-
-
-/* ── Cuenta regresiva del lanzamiento ────────────────────── */
-const cd = {
-  d: document.getElementById('cd-d'),
-  h: document.getElementById('cd-h'),
-  m: document.getElementById('cd-m'),
-  s: document.getElementById('cd-s')
-};
-
-function actualizarCuenta() {
-  const falta = CONFIG.finLanzamiento - Date.now();
-
-  if (falta <= 0) {
-    [cd.d, cd.h, cd.m, cd.s].forEach(el => { if (el) el.textContent = '00'; });
-    return;
+  /* Si algo falla, que no se caiga el resto de la página */
+  function safe(fn, nombre) {
+    try { fn(); } catch (e) { console.warn('[' + nombre + ']', e); }
   }
 
-  const dias  = Math.floor(falta / 86400000);
-  const horas = Math.floor(falta / 3600000) % 24;
-  const min   = Math.floor(falta / 60000) % 60;
-  const seg   = Math.floor(falta / 1000) % 60;
+  function $(sel, ctx) { return (ctx || document).querySelector(sel); }
+  function $$(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
 
-  const dosDigitos = n => String(n).padStart(2, '0');
-
-  if (cd.d) cd.d.textContent = dias;
-  if (cd.h) cd.h.textContent = dosDigitos(horas);
-  if (cd.m) cd.m.textContent = dosDigitos(min);
-  if (cd.s) cd.s.textContent = dosDigitos(seg);
-}
-
-if (cd.d) {
-  actualizarCuenta();
-  setInterval(actualizarCuenta, 1000);
-}
+  function pesos(n) { return '$' + Number(n).toLocaleString('es-CL'); }
 
 
-/* ── Cupos vendidos ──────────────────────────────────────── */
-const cuposTexto = document.querySelector('[data-spots-taken]');
-const cuposBarra = document.querySelector('[data-spots-bar]');
+  /* ── La apertura del aceite ───────────────────────────── */
+  function iniciarApertura() {
+    var capa = $('[data-oil]');
+    if (!capa) return;
 
-if (cuposTexto && cuposBarra) {
-  const vendidos = Math.min(CONFIG.cuposVendidos, CONFIG.cuposTotales);
-  const porcentaje = (vendidos / CONFIG.cuposTotales) * 100;
+    var quitar = function () {
+      capa.classList.add('is-gone');
+      document.body.classList.remove('is-locked');
+      setTimeout(function () {
+        if (capa && capa.parentNode) capa.parentNode.removeChild(capa);
+      }, 1400);
+    };
 
-  cuposTexto.textContent = vendidos;
-  // Pequeña espera para que se vea la animación de la barra
-  setTimeout(() => { cuposBarra.style.width = porcentaje + '%'; }, 400);
-}
+    document.body.classList.add('is-locked');
 
+    // Momento natural: cuando el aceite terminó de llenar la pantalla
+    setTimeout(quitar, 3900);
 
-/* ── Selector de servicio y total a pagar ────────────────── */
-const selector = document.getElementById('servicio');
-const cajaTotal = document.getElementById('total');
-const montoTotal = document.getElementById('total-monto');
+    // Red de seguridad por si algo se traba
+    setTimeout(quitar, 5200);
 
-function formatearPesos(numero) {
-  return '$' + Number(numero).toLocaleString('es-CL');
-}
-
-function actualizarTotal() {
-  const opcion = selector.options[selector.selectedIndex];
-  const precio = opcion && opcion.dataset.precio;
-
-  if (precio) {
-    montoTotal.textContent = formatearPesos(precio);
-    cajaTotal.hidden = false;
-  } else {
-    cajaTotal.hidden = true;
+    // Si alguien quiere saltársela
+    capa.addEventListener('click', quitar);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') quitar();
+    });
   }
-}
-
-if (selector) {
-  selector.addEventListener('change', actualizarTotal);
-  actualizarTotal();
-}
 
 
-/* ── Botones "Reservar" de toda la página ────────────────── */
-document.querySelectorAll('[data-reservar]').forEach(boton => {
-  boton.addEventListener('click', () => {
-    const buscado = boton.dataset.reservar.toLowerCase();
+  /* ── Barra de navegación ──────────────────────────────── */
+  function iniciarNav() {
+    var nav = $('[data-nav]');
+    if (!nav) return;
 
-    if (selector) {
-      // Busca la opción que mejor calce con lo que se pidió
-      const opciones = Array.from(selector.options);
-      const encontrada = opciones.find(o => {
-        const texto = o.textContent.toLowerCase();
-        return texto.startsWith(buscado) || buscado.startsWith(texto.split('—')[0].trim());
+    var pintar = function () {
+      nav.classList.toggle('is-stuck', window.scrollY > 30);
+    };
+    window.addEventListener('scroll', pintar, { passive: true });
+    pintar();
+  }
+
+
+  /* ── Menú del celular ─────────────────────────────────── */
+  function iniciarMenu() {
+    var boton = $('[data-burger]');
+    var menu = $('[data-menu]');
+    if (!boton || !menu) return;
+
+    var cerrar = function () {
+      menu.classList.remove('is-open');
+      boton.setAttribute('aria-expanded', 'false');
+      boton.setAttribute('aria-label', 'Abrir menú');
+      document.body.classList.remove('is-locked');
+    };
+
+    boton.addEventListener('click', function () {
+      var abierto = menu.classList.toggle('is-open');
+      boton.setAttribute('aria-expanded', String(abierto));
+      boton.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+      document.body.classList.toggle('is-locked', abierto);
+    });
+
+    $$('a', menu).forEach(function (a) { a.addEventListener('click', cerrar); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
+  }
+
+
+  /* ── Aparición al desplazar ───────────────────────────── */
+  function iniciarApariciones() {
+    var piezas = $$('.rise');
+    if (!piezas.length) return;
+
+    var mostrarTodo = function () {
+      piezas.forEach(function (p) { p.classList.add('is-in'); });
+    };
+
+    if (!('IntersectionObserver' in window)) { mostrarTodo(); return; }
+
+    var obs = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-in');
+          obs.unobserve(e.target);
+        }
       });
+    }, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
 
-      if (encontrada) {
-        selector.value = encontrada.value;
-        actualizarTotal();
+    piezas.forEach(function (p) { obs.observe(p); });
+
+    // Si algo impide que se disparen, se muestran igual
+    setTimeout(mostrarTodo, 6000);
+  }
+
+
+  /* ── Cuenta regresiva ─────────────────────────────────── */
+  function iniciarReloj() {
+    var reloj = $('[data-clock]');
+    if (!reloj) return;
+
+    var casillas = {
+      d: $('[data-cd="d"]', reloj),
+      h: $('[data-cd="h"]', reloj),
+      m: $('[data-cd="m"]', reloj),
+      s: $('[data-cd="s"]', reloj)
+    };
+
+    var dos = function (n) { return String(n).padStart(2, '0'); };
+
+    var tick = function () {
+      var falta = CFG.finLanzamiento - Date.now();
+
+      if (falta <= 0) {
+        Object.keys(casillas).forEach(function (k) {
+          if (casillas[k]) casillas[k].textContent = '00';
+        });
+        return;
       }
+
+      if (casillas.d) casillas.d.textContent = Math.floor(falta / 86400000);
+      if (casillas.h) casillas.h.textContent = dos(Math.floor(falta / 3600000) % 24);
+      if (casillas.m) casillas.m.textContent = dos(Math.floor(falta / 60000) % 60);
+      if (casillas.s) casillas.s.textContent = dos(Math.floor(falta / 1000) % 60);
+    };
+
+    tick();
+    setInterval(tick, 1000);
+  }
+
+
+  /* ── El frasco de aceite se llena con los cupos ───────── */
+  function iniciarFrasco() {
+    var aceite = $('[data-jar-oil]');
+    var numero = $('[data-taken]');
+
+    var vendidos = Math.max(0, Math.min(CFG.cuposVendidos, CFG.cuposTotales));
+
+    if (numero) numero.textContent = vendidos;
+
+    if (aceite) {
+      var alto = (vendidos / CFG.cuposTotales) * 100;
+      // Pequeña espera para que se vea subir el aceite
+      setTimeout(function () { aceite.style.height = alto + '%'; }, 600);
     }
-
-    document.getElementById('reservar').scrollIntoView({ behavior: 'smooth' });
-  });
-});
+  }
 
 
-/* ── Enlace de reseñas de Google ─────────────────────────── */
-document.querySelectorAll('[data-google-review]').forEach(enlace => {
-  enlace.href = CONFIG.enlaceResenas;
-  enlace.target = '_blank';
-  enlace.rel = 'noopener';
-});
+  /* ── Selector de servicio y total ─────────────────────── */
+  function iniciarReserva() {
+    var selector = $('[data-service]');
+    var caja = $('[data-total]');
+    var monto = $('[data-total-n]');
+    if (!selector) return;
+
+    var refrescar = function () {
+      var op = selector.options[selector.selectedIndex];
+      var precio = op && op.getAttribute('data-p');
+
+      if (precio && monto && caja) {
+        monto.textContent = pesos(precio);
+        caja.hidden = false;
+      } else if (caja) {
+        caja.hidden = true;
+      }
+
+      // Guardamos lo elegido para el mensaje de WhatsApp
+      if (op && precio) {
+        try { sessionStorage.setItem('mv_eleccion', op.textContent.trim()); } catch (e) {}
+      }
+    };
+
+    selector.addEventListener('change', refrescar);
+    refrescar();
+
+    // Los botones "Reservar" de toda la página
+    $$('[data-pick]').forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        var buscado = boton.getAttribute('data-pick').toLowerCase();
+
+        var opciones = Array.prototype.slice.call(selector.options);
+        var hallada = opciones.filter(function (o) {
+          var texto = o.textContent.toLowerCase();
+          return texto.indexOf(buscado) === 0 ||
+                 buscado.indexOf(texto.split('—')[0].trim()) === 0;
+        })[0];
+
+        if (hallada) {
+          selector.value = hallada.value;
+          refrescar();
+        }
+
+        var destino = $('#reservar');
+        if (destino) destino.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  }
 
 
-/* ── El WhatsApp lleva el servicio elegido ───────────────── */
-const botonPagar = document.getElementById('btn-pagar');
+  /* ── Enlaces que salen de la configuración ────────────── */
+  function iniciarEnlaces() {
+    $$('[data-review]').forEach(function (a) {
+      a.href = CFG.enlaceResenas; a.target = '_blank'; a.rel = 'noopener';
+    });
 
-if (botonPagar && selector) {
-  botonPagar.addEventListener('click', () => {
-    const opcion = selector.options[selector.selectedIndex];
-    if (opcion && opcion.dataset.precio) {
-      // Guarda lo elegido para el mensaje de WhatsApp
-      try {
-        sessionStorage.setItem('mv_servicio', opcion.textContent);
-      } catch (e) { /* modo privado del navegador */ }
-    }
-  });
-}
+    $$('[data-calendar]').forEach(function (a) { a.href = CFG.enlaceCalendario; });
+    $$('[data-pay]').forEach(function (a) { a.href = CFG.enlacePago; });
+    $$('[data-instagram]').forEach(function (a) { a.href = CFG.instagram; });
 
-document.querySelectorAll('a[href*="wa.me"]').forEach(enlace => {
-  enlace.addEventListener('click', () => {
-    let guardado = null;
-    try { guardado = sessionStorage.getItem('mv_servicio'); } catch (e) {}
+    // El WhatsApp de la reserva lleva lo que la persona eligió
+    $$('[data-wsp-book]').forEach(function (a) {
+      a.addEventListener('click', function () {
+        var elegido = null;
+        try { elegido = sessionStorage.getItem('mv_eleccion'); } catch (e) {}
 
-    if (guardado && enlace.href.includes('acabo%20de%20reservar')) {
-      const texto = `Hola Alejandro, acabo de reservar en Manos Vivas: ${guardado}`;
-      enlace.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(texto)}`;
-    }
-  });
-});
+        var texto = elegido
+          ? 'Hola Alejandro, acabo de reservar en Manos Vivas: ' + elegido
+          : 'Hola Alejandro, acabo de reservar en Manos Vivas';
+
+        a.href = 'https://wa.me/' + CFG.whatsapp + '?text=' + encodeURIComponent(texto);
+      });
+    });
+  }
+
+
+  /* ── Arranque ─────────────────────────────────────────── */
+  function arrancar() {
+    safe(iniciarApertura,    'apertura');
+    safe(iniciarNav,         'nav');
+    safe(iniciarMenu,        'menu');
+    safe(iniciarApariciones, 'apariciones');
+    safe(iniciarReloj,       'reloj');
+    safe(iniciarFrasco,      'frasco');
+    safe(iniciarReserva,     'reserva');
+    safe(iniciarEnlaces,     'enlaces');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', arrancar);
+  } else {
+    arrancar();
+  }
+
+})();
