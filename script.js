@@ -7,29 +7,40 @@
 
 window.__MANOS_VIVAS__ = {
 
-  // Cupos del Pack Apertura que ya vendiste (de 0 a 10).
-  // El frasco de aceite de la web se llena solo según este número.
+  // Cupos del Ritual de Apertura que ya vendiste (de 0 a 10).
+  // La barra de la web se llena sola según este número.
+  // Son cupos REALES: sube este número solo cuando vendas de verdad.
   cuposVendidos: 0,
 
-  // Total de cupos del lanzamiento.
+  // Total de cupos de la campaña de apertura.
   cuposTotales: 10,
 
-  // Hasta cuándo dura el precio de apertura (año, mes, día, hora, minuto).
-  // OJO con el mes: enero es 0, así que septiembre es 8.
-  finLanzamiento: new Date(2026, 8, 18, 23, 59),
+  // Tus enlaces de Calendly, uno por cada duración total posible.
+  // Crea en Calendly un tipo de evento por duración y pega aquí su enlace.
+  // Si dejas alguno vacío, se usa el enlace general de más abajo.
+  calendarios: {
+    60:  '',
+    70:  '',
+    75:  '',
+    90:  '',
+    100: '',
+    105: '',
+    120: ''
+  },
 
-  // Tu enlace para que la gente te deje reseñas en Google.
-  // Lo consigues creando tu Perfil de Empresa en Google.
-  enlaceResenas: 'https://g.page/r/TU-CODIGO/review',
-
-  // Tu enlace de Calendly para que elijan día y hora.
+  // Enlace general de Calendly (respaldo y para packs y suscripciones).
   enlaceCalendario: 'https://calendly.com/manosvivas',
 
   // Tu enlace de cobro de MercadoPago.
   enlacePago: 'https://link.mercadopago.cl/manosvivas',
 
-  // Tu Instagram (la dirección completa).
+  // Tu enlace para que la gente te deje reseñas en Google.
+  // Lo consigues creando tu Perfil de Empresa en Google.
+  enlaceResenas: 'https://g.page/r/TU-CODIGO/review',
+
+  // Tus redes (la dirección completa).
   instagram: 'https://instagram.com/manosvivas',
+  facebook:  'https://facebook.com/manosvivas',
 
   // Tu WhatsApp, sin el signo + ni espacios.
   whatsapp: '56995742775'
@@ -53,6 +64,14 @@ window.__MANOS_VIVAS__ = {
   function $$(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
 
   function pesos(n) { return '$' + Number(n).toLocaleString('es-CL'); }
+
+  /* Traduce una clave del diccionario con respaldo en español */
+  function txt(clave, respaldo) {
+    var D = window.__IDIOMAS__;
+    var idioma = document.documentElement.lang || 'es';
+    var d = D && (D[idioma] || D.es);
+    return (d && d[clave]) ? d[clave] : respaldo;
+  }
 
 
   /* ── La apertura del aceite ───────────────────────────── */
@@ -106,14 +125,16 @@ window.__MANOS_VIVAS__ = {
     var cerrar = function () {
       menu.classList.remove('is-open');
       boton.setAttribute('aria-expanded', 'false');
-      boton.setAttribute('aria-label', 'Abrir menú');
+      boton.setAttribute('aria-label', txt('a11y.menu', 'Abrir menú'));
       document.body.classList.remove('is-locked');
     };
 
     boton.addEventListener('click', function () {
       var abierto = menu.classList.toggle('is-open');
       boton.setAttribute('aria-expanded', String(abierto));
-      boton.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+      boton.setAttribute('aria-label', abierto
+        ? txt('a11y.menuCerrar', 'Cerrar menú')
+        : txt('a11y.menu', 'Abrir menú'));
       document.body.classList.toggle('is-locked', abierto);
     });
 
@@ -149,106 +170,298 @@ window.__MANOS_VIVAS__ = {
   }
 
 
-  /* ── Cuenta regresiva ─────────────────────────────────── */
-  function iniciarReloj() {
-    var reloj = $('[data-clock]');
-    if (!reloj) return;
+  /* ── "Conoce más" de cada masaje ──────────────────────── */
+  function iniciarDetalles() {
+    $$('[data-detalle]').forEach(function (boton) {
+      var id = boton.getAttribute('data-detalle');
+      var caja = $('[data-detalle-de="' + id + '"]');
+      if (!caja) return;
 
-    var casillas = {
-      d: $('[data-cd="d"]', reloj),
-      h: $('[data-cd="h"]', reloj),
-      m: $('[data-cd="m"]', reloj),
-      s: $('[data-cd="s"]', reloj)
-    };
+      boton.setAttribute('aria-expanded', 'false');
 
-    var dos = function (n) { return String(n).padStart(2, '0'); };
-
-    var tick = function () {
-      var falta = CFG.finLanzamiento - Date.now();
-
-      if (falta <= 0) {
-        Object.keys(casillas).forEach(function (k) {
-          if (casillas[k]) casillas[k].textContent = '00';
-        });
-        return;
-      }
-
-      if (casillas.d) casillas.d.textContent = Math.floor(falta / 86400000);
-      if (casillas.h) casillas.h.textContent = dos(Math.floor(falta / 3600000) % 24);
-      if (casillas.m) casillas.m.textContent = dos(Math.floor(falta / 60000) % 60);
-      if (casillas.s) casillas.s.textContent = dos(Math.floor(falta / 1000) % 60);
-    };
-
-    tick();
-    setInterval(tick, 1000);
+      boton.addEventListener('click', function () {
+        var abierto = caja.hidden;
+        caja.hidden = !abierto;
+        boton.setAttribute('aria-expanded', String(abierto));
+        boton.textContent = abierto
+          ? txt('cat.cerrar', 'Cerrar')
+          : txt('cat.conoce', 'Conoce más');
+      });
+    });
   }
 
 
-  /* ── El frasco de aceite se llena con los cupos ───────── */
-  function iniciarFrasco() {
-    var aceite = $('[data-jar-oil]');
-    var numero = $('[data-taken]');
+  /* ── Cupos reales del Ritual de Apertura ──────────────── */
+  function iniciarCupos() {
+    var total = Math.max(1, CFG.cuposTotales);
+    var vendidos = Math.max(0, Math.min(CFG.cuposVendidos, total));
+    var libres = total - vendidos;
 
-    var vendidos = Math.max(0, Math.min(CFG.cuposVendidos, CFG.cuposTotales));
+    var numero = $('[data-cupos-libres]');
+    if (numero) numero.textContent = libres;
 
-    if (numero) numero.textContent = vendidos;
+    var barra = $('[data-cupos-barra]');
+    if (barra) {
+      // Se ve avanzar despacio, sin prisa fabricada
+      setTimeout(function () {
+        barra.style.width = ((vendidos / total) * 100) + '%';
+      }, 700);
+    }
 
-    if (aceite) {
-      var alto = (vendidos / CFG.cuposTotales) * 100;
-      // Pequeña espera para que se vea subir el aceite
-      setTimeout(function () { aceite.style.height = alto + '%'; }, 600);
+    // Si se acabaron, lo decimos con honestidad
+    if (libres === 0) {
+      $$('[data-elegir="apertura"]').forEach(function (b) {
+        b.classList.add('is-off');
+        b.setAttribute('aria-disabled', 'true');
+        b.textContent = txt('ap.agotado', 'Cupos agotados por ahora');
+      });
     }
   }
 
 
-  /* ── Selector de servicio y total ─────────────────────── */
+  /* ── El motor de la reserva ───────────────────────────── */
   function iniciarReserva() {
-    var selector = $('[data-service]');
-    var caja = $('[data-total]');
-    var monto = $('[data-total-n]');
+    var selector = $('[data-sel-servicio]');
     if (!selector) return;
 
-    var refrescar = function () {
-      var op = selector.options[selector.selectedIndex];
-      var precio = op && op.getAttribute('data-p');
+    var bloqueDur = $('[data-bloque-duracion]');
+    var botonesDur = $$('[data-dur]');
+    var botonesAdd = $$('[data-add]');
+    var botonesPara = $$('[data-para]');
+    var cajaRegalo = $('[data-regalo]');
+    var campoNombre = $('[data-regalo-nombre]');
+    var campoMensaje = $('[data-regalo-mensaje]');
 
-      if (precio && monto && caja) {
-        monto.textContent = pesos(precio);
-        caja.hidden = false;
-      } else if (caja) {
-        caja.hidden = true;
-      }
+    var rServicio = $('[data-r-servicio]');
+    var rDuracion = $('[data-r-duracion]');
+    var rExtras   = $('[data-r-extras]');
+    var rPara     = $('[data-r-para]');
+    var rTotal    = $('[data-r-total]');
+    var filaExtras = $('[data-r-fila-extras]');
+    var filaPara   = $('[data-r-fila-para]');
 
-      // Guardamos lo elegido para el mensaje de WhatsApp
-      if (op && precio) {
-        try { sessionStorage.setItem('mv_eleccion', op.textContent.trim()); } catch (e) {}
-      }
+    var enlaceCal = $('[data-calendario]');
+    var casilla   = $('[data-acepto]');
+    var botonPago = $('[data-pagar]');
+    var botonWsp  = $('[data-wsp-reserva]');
+
+    /* Duraciones que existen en el calendario */
+    var DURACIONES = [60, 70, 75, 90, 100, 105, 120];
+
+    var estado = {
+      duracion: 60,
+      extraDur: 0,
+      para: 'mi'
     };
 
-    selector.addEventListener('change', refrescar);
-    refrescar();
+    function opcionActual() {
+      return selector.options[selector.selectedIndex] || null;
+    }
 
-    // Los botones "Reservar" de toda la página
-    $$('[data-pick]').forEach(function (boton) {
-      boton.addEventListener('click', function () {
-        var buscado = boton.getAttribute('data-pick').toLowerCase();
+    function esFijo() {
+      var op = opcionActual();
+      return !!(op && op.getAttribute('data-fijo') === '1');
+    }
 
-        var opciones = Array.prototype.slice.call(selector.options);
-        var hallada = opciones.filter(function (o) {
-          var texto = o.textContent.toLowerCase();
-          return texto.indexOf(buscado) === 0 ||
-                 buscado.indexOf(texto.split('—')[0].trim()) === 0;
-        })[0];
+    function extrasElegidos() {
+      return botonesAdd.filter(function (b) { return b.classList.contains('is-on'); });
+    }
 
-        if (hallada) {
-          selector.value = hallada.value;
-          refrescar();
+    /* La duración que pediremos al calendario: la más cercana
+       hacia arriba entre las que existen de verdad. */
+    function duracionCalendario(minutos) {
+      for (var i = 0; i < DURACIONES.length; i++) {
+        if (DURACIONES[i] >= minutos) return DURACIONES[i];
+      }
+      return DURACIONES[DURACIONES.length - 1];
+    }
+
+    function refrescar() {
+      var op = opcionActual();
+      var fijo = esFijo();
+
+      // Los packs, suscripciones y el Ritual no eligen duración aquí
+      if (bloqueDur) bloqueDur.hidden = fijo || !op || !op.value;
+
+      var base = op ? Number(op.getAttribute('data-precio') || 0) : 0;
+      var total = base;
+      var minutos = 0;
+      var nombres = [];
+
+      if (!fijo && op && op.value) {
+        total += estado.extraDur;
+        minutos = estado.duracion;
+
+        extrasElegidos().forEach(function (b) {
+          total += Number(b.getAttribute('data-precio') || 0);
+          minutos += Number(b.getAttribute('data-min') || 0);
+          nombres.push(b.querySelector('span').textContent.trim());
+        });
+      }
+
+      // Resumen
+      if (rServicio) {
+        rServicio.textContent = (op && op.value)
+          ? op.textContent.trim()
+          : '—';
+      }
+
+      if (rDuracion) {
+        rDuracion.textContent = minutos
+          ? minutos + ' ' + txt('re.minutos', 'minutos')
+          : (fijo ? txt('re.porSesion', 'Se agenda sesión por sesión') : '—');
+      }
+
+      if (filaExtras) filaExtras.hidden = !nombres.length;
+      if (rExtras) rExtras.textContent = nombres.length ? nombres.join(' · ') : '—';
+
+      var nombreRegalo = campoNombre ? campoNombre.value.trim() : '';
+      if (filaPara) filaPara.hidden = estado.para !== 'regalo';
+      if (rPara) {
+        rPara.textContent = nombreRegalo || txt('re.regaloSin', 'Regalo');
+      }
+
+      if (rTotal) rTotal.textContent = (op && op.value) ? pesos(total) : '—';
+
+      // Calendario con la duración real
+      if (enlaceCal) {
+        var destino = CFG.enlaceCalendario;
+        if (!fijo && minutos) {
+          var d = duracionCalendario(minutos);
+          if (CFG.calendarios && CFG.calendarios[d]) destino = CFG.calendarios[d];
         }
+        enlaceCal.href = destino;
+      }
 
-        var destino = $('#reservar');
-        if (destino) destino.scrollIntoView({ behavior: 'smooth' });
+      // Guardamos la elección para el mensaje de WhatsApp
+      var resumen = {
+        servicio: (op && op.value) ? op.textContent.trim() : '',
+        minutos: minutos,
+        extras: nombres,
+        total: (op && op.value) ? pesos(total) : '',
+        regalo: estado.para === 'regalo' ? nombreRegalo : '',
+        mensaje: (estado.para === 'regalo' && campoMensaje) ? campoMensaje.value.trim() : ''
+      };
+      try { sessionStorage.setItem('mv_reserva', JSON.stringify(resumen)); } catch (e) {}
+
+      pintarPago();
+    }
+
+    /* Pagar solo se habilita al aceptar las condiciones */
+    function pintarPago() {
+      var listo = !!(casilla && casilla.checked) && !!(opcionActual() && opcionActual().value);
+      if (botonPago) {
+        botonPago.classList.toggle('is-off', !listo);
+        botonPago.setAttribute('aria-disabled', String(!listo));
+        botonPago.href = listo ? CFG.enlacePago : '#';
+      }
+    }
+
+    /* ── Escuchas ── */
+    selector.addEventListener('change', function () {
+      // Al cambiar de servicio, la duración vuelve a 60
+      botonesDur.forEach(function (b) {
+        b.classList.toggle('is-on', b.getAttribute('data-dur') === '60');
+      });
+      estado.duracion = 60;
+      estado.extraDur = 0;
+      refrescar();
+    });
+
+    botonesDur.forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        botonesDur.forEach(function (b) { b.classList.remove('is-on'); });
+        boton.classList.add('is-on');
+        estado.duracion = Number(boton.getAttribute('data-dur'));
+        estado.extraDur = Number(boton.getAttribute('data-extra') || 0);
+        refrescar();
       });
     });
+
+    botonesAdd.forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        var grupo = boton.getAttribute('data-grupo');
+
+        // +10 y +15 minutos son excluyentes entre sí
+        if (grupo && !boton.classList.contains('is-on')) {
+          botonesAdd.forEach(function (b) {
+            if (b !== boton && b.getAttribute('data-grupo') === grupo) b.classList.remove('is-on');
+          });
+        }
+
+        boton.classList.toggle('is-on');
+        boton.setAttribute('aria-pressed', String(boton.classList.contains('is-on')));
+        refrescar();
+      });
+    });
+
+    botonesPara.forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        botonesPara.forEach(function (b) { b.classList.remove('is-on'); });
+        boton.classList.add('is-on');
+        estado.para = boton.getAttribute('data-para');
+        if (cajaRegalo) cajaRegalo.hidden = estado.para !== 'regalo';
+        refrescar();
+      });
+    });
+
+    if (campoNombre) campoNombre.addEventListener('input', refrescar);
+    if (campoMensaje) campoMensaje.addEventListener('input', refrescar);
+    if (casilla) casilla.addEventListener('change', pintarPago);
+
+    /* WhatsApp con el detalle de lo que armó la persona */
+    if (botonWsp) {
+      botonWsp.addEventListener('click', function () {
+        var r = null;
+        try { r = JSON.parse(sessionStorage.getItem('mv_reserva') || 'null'); } catch (e) {}
+
+        var lineas = ['Hola Alejandro, quiero reservar en Manos Vivas.'];
+        if (r && r.servicio) {
+          lineas.push('Servicio: ' + r.servicio);
+          if (r.minutos) lineas.push('Duración: ' + r.minutos + ' minutos');
+          if (r.extras && r.extras.length) lineas.push('Complementos: ' + r.extras.join(', '));
+          if (r.regalo) lineas.push('Es un regalo para: ' + r.regalo);
+          if (r.mensaje) lineas.push('Mensaje: ' + r.mensaje);
+          if (r.total) lineas.push('Total: ' + r.total);
+        }
+
+        botonWsp.href = 'https://wa.me/' + CFG.whatsapp +
+                        '?text=' + encodeURIComponent(lineas.join('\n'));
+      });
+    }
+
+    /* Los botones "Reservar" repartidos por toda la página */
+    $$('[data-elegir]').forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        if (boton.getAttribute('aria-disabled') === 'true') return;
+
+        var valor = boton.getAttribute('data-elegir');
+        var min = boton.getAttribute('data-min');
+
+        var existe = Array.prototype.some.call(selector.options, function (o) {
+          return o.value === valor;
+        });
+        if (existe) selector.value = valor;
+
+        if (min) {
+          botonesDur.forEach(function (b) {
+            var suyo = b.getAttribute('data-dur') === String(min);
+            b.classList.toggle('is-on', suyo);
+            if (suyo) {
+              estado.duracion = Number(min);
+              estado.extraDur = Number(b.getAttribute('data-extra') || 0);
+            }
+          });
+        }
+
+        refrescar();
+
+        var destino = $('#reservar');
+        if (destino) destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    refrescar();
   }
 
 
@@ -257,23 +470,10 @@ window.__MANOS_VIVAS__ = {
     $$('[data-review]').forEach(function (a) {
       a.href = CFG.enlaceResenas; a.target = '_blank'; a.rel = 'noopener';
     });
-
-    $$('[data-calendar]').forEach(function (a) { a.href = CFG.enlaceCalendario; });
-    $$('[data-pay]').forEach(function (a) { a.href = CFG.enlacePago; });
     $$('[data-instagram]').forEach(function (a) { a.href = CFG.instagram; });
-
-    // El WhatsApp de la reserva lleva lo que la persona eligió
-    $$('[data-wsp-book]').forEach(function (a) {
-      a.addEventListener('click', function () {
-        var elegido = null;
-        try { elegido = sessionStorage.getItem('mv_eleccion'); } catch (e) {}
-
-        var texto = elegido
-          ? 'Hola Alejandro, acabo de reservar en Manos Vivas: ' + elegido
-          : 'Hola Alejandro, acabo de reservar en Manos Vivas';
-
-        a.href = 'https://wa.me/' + CFG.whatsapp + '?text=' + encodeURIComponent(texto);
-      });
+    $$('[data-facebook]').forEach(function (a) { a.href = CFG.facebook; });
+    $$('[data-wsp-flotante]').forEach(function (a) {
+      a.href = 'https://wa.me/' + CFG.whatsapp;
     });
   }
 
@@ -309,10 +509,12 @@ window.__MANOS_VIVAS__ = {
         if (d[clave] != null) el.innerHTML = d[clave];
       });
 
-      // Etiquetas para lectores de pantalla
+      // Etiquetas para lectores de pantalla y grupos de opciones
       $$('[data-t-label]').forEach(function (el) {
         var clave = el.getAttribute('data-t-label');
-        if (d[clave]) el.setAttribute('aria-label', d[clave]);
+        if (!d[clave]) return;
+        if (el.tagName === 'OPTGROUP') el.setAttribute('label', d[clave]);
+        else el.setAttribute('aria-label', d[clave]);
       });
 
       // Cabecera del documento
@@ -330,7 +532,6 @@ window.__MANOS_VIVAS__ = {
 
       PREF.guardar('idioma', idioma);
 
-      // El menú puede haber cambiado de largo
       refrescarEtiquetaMenu(d);
     }
 
@@ -346,8 +547,7 @@ window.__MANOS_VIVAS__ = {
       var nav = (navigator.language || 'es').slice(0, 2).toLowerCase();
       guardado = DICC[nav] ? nav : 'es';
     }
-    if (guardado !== 'es') aplicar(guardado);
-    else aplicar('es');
+    aplicar(DICC[guardado] ? guardado : 'es');
   }
 
   function refrescarEtiquetaMenu(d) {
@@ -369,7 +569,7 @@ window.__MANOS_VIVAS__ = {
       if (boton) boton.setAttribute('aria-pressed', String(modo === 'noche'));
 
       var meta = $('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', modo === 'noche' ? '#1a1d17' : '#f7f2ea');
+      if (meta) meta.setAttribute('content', modo === 'noche' ? '#15180f' : '#f7f2ea');
 
       PREF.guardar('modo', modo);
     }
@@ -485,12 +685,9 @@ window.__MANOS_VIVAS__ = {
     function pintar() {
       boton.setAttribute('aria-pressed', String(sonando));
       boton.classList.toggle('is-on', sonando);
-
-      var d = window.__IDIOMAS__ && window.__IDIOMAS__[document.documentElement.lang];
-      if (d) {
-        var clave = sonando ? 'a11y.sonidoOff' : 'a11y.sonido';
-        if (d[clave]) boton.setAttribute('aria-label', d[clave]);
-      }
+      boton.setAttribute('aria-label', sonando
+        ? txt('a11y.sonidoOff', 'Apagar el sonido ambiental')
+        : txt('a11y.sonido', 'Encender el sonido ambiental'));
     }
 
     boton.addEventListener('click', function () {
@@ -520,8 +717,8 @@ window.__MANOS_VIVAS__ = {
     safe(iniciarNav,         'nav');
     safe(iniciarMenu,        'menu');
     safe(iniciarApariciones, 'apariciones');
-    safe(iniciarReloj,       'reloj');
-    safe(iniciarFrasco,      'frasco');
+    safe(iniciarDetalles,    'detalles');
+    safe(iniciarCupos,       'cupos');
     safe(iniciarReserva,     'reserva');
     safe(iniciarEnlaces,     'enlaces');
   }
