@@ -2,48 +2,24 @@
    MANOS VIVAS
 
    ⬇⬇⬇  LO ÚNICO QUE NECESITAS EDITAR TÚ  ⬇⬇⬇
-   Cambia los valores, guarda el archivo y listo.
    ═══════════════════════════════════════════════════════════ */
 
-window.__MANOS_VIVAS__ = {
+window.MV = {
 
-  // Cupos del Ritual de Apertura que ya vendiste (de 0 a 10).
-  // La barra de la web se llena sola según este número.
-  // Son cupos REALES: sube este número solo cuando vendas de verdad.
-  cuposVendidos: 0,
-
-  // Total de cupos de la campaña de apertura.
-  cuposTotales: 10,
-
-  // Tus enlaces de Calendly, uno por cada duración total posible.
-  // Crea en Calendly un tipo de evento por duración y pega aquí su enlace.
-  // Si dejas alguno vacío, se usa el enlace general de más abajo.
-  calendarios: {
-    60:  '',
-    70:  '',
-    75:  '',
-    90:  '',
-    100: '',
-    105: '',
-    120: ''
-  },
-
-  // Enlace general de Calendly (respaldo y para packs y suscripciones).
-  enlaceCalendario: 'https://calendly.com/manosvivas',
-
-  // Tu enlace de cobro de MercadoPago.
-  enlacePago: 'https://link.mercadopago.cl/manosvivas',
-
-  // Tu enlace para que la gente te deje reseñas en Google.
-  // Lo consigues creando tu Perfil de Empresa en Google.
-  enlaceResenas: 'https://g.page/r/TU-CODIGO/review',
+  // Tu WhatsApp, sin el signo + ni espacios.
+  whatsapp: '56995742775',
 
   // Tus redes (la dirección completa).
   instagram: 'https://instagram.com/manosvivas',
   facebook:  'https://facebook.com/manosvivas',
 
-  // Tu WhatsApp, sin el signo + ni espacios.
-  whatsapp: '56995742775'
+  // Cuando tengas Calendly y Mercado Pago funcionando de verdad,
+  // pon aquí los enlaces y cambia `pagoEnLinea` a true.
+  // Mientras estén vacíos, la web envía una SOLICITUD por WhatsApp
+  // y nunca dice que una hora quedó tomada.
+  enlaceCalendario: '',
+  enlacePago: '',
+  pagoEnLinea: false
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -53,471 +29,747 @@ window.__MANOS_VIVAS__ = {
 (function () {
   'use strict';
 
-  var CFG = window.__MANOS_VIVAS__;
+  var CFG = window.MV;
 
-  /* Si algo falla, que no se caiga el resto de la página */
-  function safe(fn, nombre) {
+  function seguro(fn, nombre) {
     try { fn(); } catch (e) { console.warn('[' + nombre + ']', e); }
   }
 
-  function $(sel, ctx) { return (ctx || document).querySelector(sel); }
-  function $$(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
-
+  function $(s, c) { return (c || document).querySelector(s); }
+  function $$(s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); }
   function pesos(n) { return '$' + Number(n).toLocaleString('es-CL'); }
 
-  /* Traduce una clave del diccionario con respaldo en español */
+  /* Un texto del diccionario, con respaldo si aún no cargó */
   function txt(clave, respaldo) {
-    var D = window.__IDIOMAS__;
-    var idioma = document.documentElement.lang || 'es';
-    var d = D && (D[idioma] || D.es);
+    var D = window.IDIOMAS;
+    var d = D && (D[document.documentElement.lang] || D.es);
     return (d && d[clave]) ? d[clave] : respaldo;
   }
 
+  /* ── Catálogo: precios y textos en un solo lugar ─────── */
 
-  /* ── La apertura del aceite ───────────────────────────── */
-  function iniciarApertura() {
-    var capa = $('[data-oil]');
+  var BASE_60 = 55000;
+  var EXTRA_90 = 18000;
+
+  var MASAJES = ['relajante', 'mixto', 'personalizado', 'descontracturante',
+                 'profundo', 'deportivo', 'drenaje', 'mama'];
+
+  var FIJOS = {
+    apertura: { precio: 89990, clave: 'op.apertura' },
+    pack4:    { precio: 195000, clave: 'op.pack4' },
+    pack6:    { precio: 295000, clave: 'op.pack6' },
+    pack8:    { precio: 395000, clave: 'op.pack8' },
+    sub1:     { precio: 55000,  clave: 'op.sub1' },
+    sub2:     { precio: 105000, clave: 'op.sub2' },
+    sub4:     { precio: 205000, clave: 'op.sub4' },
+    sub8:     { precio: 380000, clave: 'op.sub8' }
+  };
+
+
+  /* ── La apertura ──────────────────────────────────────── */
+  function iniciarIntro() {
+    var capa = $('[data-intro]');
     if (!capa) return;
 
-    var quitar = function () {
-      capa.classList.add('is-gone');
-      document.body.classList.remove('is-locked');
+    var quieto = window.matchMedia &&
+                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.body.classList.add('sin-scroll');
+
+    var irse = function () {
+      capa.classList.add('se-fue');
+      document.body.classList.remove('sin-scroll');
       setTimeout(function () {
-        if (capa && capa.parentNode) capa.parentNode.removeChild(capa);
-      }, 1400);
+        if (capa.parentNode) capa.parentNode.removeChild(capa);
+      }, 1100);
     };
 
-    document.body.classList.add('is-locked');
-
-    // Momento natural: cuando el aceite terminó de llenar la pantalla
-    setTimeout(quitar, 3900);
-
-    // Red de seguridad por si algo se traba
-    setTimeout(quitar, 5200);
-
-    // Si alguien quiere saltársela
-    capa.addEventListener('click', quitar);
+    setTimeout(irse, quieto ? 500 : 3900);
+    setTimeout(irse, 5400);                    // red de seguridad
+    capa.addEventListener('click', irse);
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') quitar();
+      if (e.key === 'Escape') irse();
     });
   }
 
 
-  /* ── Barra de navegación ──────────────────────────────── */
+  /* ── Barra y menú ─────────────────────────────────────── */
   function iniciarNav() {
     var nav = $('[data-nav]');
-    if (!nav) return;
+    if (nav) {
+      var pintar = function () { nav.classList.toggle('pegada', window.scrollY > 24); };
+      window.addEventListener('scroll', pintar, { passive: true });
+      pintar();
+    }
 
-    var pintar = function () {
-      nav.classList.toggle('is-stuck', window.scrollY > 30);
-    };
-    window.addEventListener('scroll', pintar, { passive: true });
-    pintar();
-  }
-
-
-  /* ── Menú del celular ─────────────────────────────────── */
-  function iniciarMenu() {
     var boton = $('[data-burger]');
     var menu = $('[data-menu]');
     if (!boton || !menu) return;
 
     var cerrar = function () {
-      menu.classList.remove('is-open');
+      menu.classList.remove('abierto');
       boton.setAttribute('aria-expanded', 'false');
       boton.setAttribute('aria-label', txt('a11y.menu', 'Abrir menú'));
-      document.body.classList.remove('is-locked');
+      document.body.classList.remove('sin-scroll');
     };
 
     boton.addEventListener('click', function () {
-      var abierto = menu.classList.toggle('is-open');
+      var abierto = menu.classList.toggle('abierto');
       boton.setAttribute('aria-expanded', String(abierto));
       boton.setAttribute('aria-label', abierto
         ? txt('a11y.menuCerrar', 'Cerrar menú')
         : txt('a11y.menu', 'Abrir menú'));
-      document.body.classList.toggle('is-locked', abierto);
+      document.body.classList.toggle('sin-scroll', abierto);
     });
 
-    $$('a', menu).forEach(function (a) { a.addEventListener('click', cerrar); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
+    $$('a, button', menu).forEach(function (el) {
+      el.addEventListener('click', cerrar);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') cerrar();
+    });
   }
 
 
   /* ── Aparición al desplazar ───────────────────────────── */
   function iniciarApariciones() {
-    var piezas = $$('.rise');
+    var piezas = $$('.sube');
     if (!piezas.length) return;
 
-    var mostrarTodo = function () {
-      piezas.forEach(function (p) { p.classList.add('is-in'); });
-    };
+    var todo = function () { piezas.forEach(function (p) { p.classList.add('visible'); }); };
+    if (!('IntersectionObserver' in window)) { todo(); return; }
 
-    if (!('IntersectionObserver' in window)) { mostrarTodo(); return; }
-
-    var obs = new IntersectionObserver(function (entradas) {
-      entradas.forEach(function (e) {
-        if (e.isIntersecting) {
-          e.target.classList.add('is-in');
-          obs.unobserve(e.target);
-        }
+    var obs = new IntersectionObserver(function (lista) {
+      lista.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
       });
-    }, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
 
     piezas.forEach(function (p) { obs.observe(p); });
-
-    // Si algo impide que se disparen, se muestran igual
-    setTimeout(mostrarTodo, 6000);
+    setTimeout(todo, 6000);      // por si algo impide que se disparen
   }
 
 
-  /* ── "Conoce más" de cada masaje ──────────────────────── */
-  function iniciarDetalles() {
-    $$('[data-detalle]').forEach(function (boton) {
-      var id = boton.getAttribute('data-detalle');
-      var caja = $('[data-detalle-de="' + id + '"]');
-      if (!caja) return;
+  /* ── ¿Cómo quieres sentirte hoy? ──────────────────────── */
+  function iniciarAnimo() {
+    var botones = $$('[data-animo]');
+    var tarjetas = $$('.masaje');
+    var nota = $('[data-animo-nota]');
+    if (!botones.length) return;
 
-      boton.setAttribute('aria-expanded', 'false');
+    function aplicar(grupo) {
+      botones.forEach(function (b) {
+        var suyo = b.getAttribute('data-animo') === grupo;
+        b.classList.toggle('is-on', suyo);
+        b.setAttribute('aria-selected', String(suyo));
+      });
 
-      boton.addEventListener('click', function () {
-        var abierto = caja.hidden;
-        caja.hidden = !abierto;
-        boton.setAttribute('aria-expanded', String(abierto));
-        boton.textContent = abierto
-          ? txt('cat.cerrar', 'Cerrar')
-          : txt('cat.conoce', 'Conoce más');
+      tarjetas.forEach(function (t) {
+        var suyos = (t.getAttribute('data-grupos') || '').split(' ');
+        var entra = suyos.indexOf(grupo) !== -1;
+        t.hidden = !entra;
+        if (entra) {              // reinicia la animación de entrada
+          t.style.animation = 'none';
+          void t.offsetWidth;
+          t.style.animation = '';
+        }
+      });
+
+      if (nota) {
+        nota.setAttribute('data-t', 'an.nota.' + grupo);
+        nota.textContent = txt('an.nota.' + grupo, nota.textContent);
+      }
+    }
+
+    botones.forEach(function (b) {
+      b.addEventListener('click', function () { aplicar(b.getAttribute('data-animo')); });
+    });
+
+    aplicar('calma');
+  }
+
+
+  /* ── Detalle del masaje ───────────────────────────────── */
+  function iniciarDetalle() {
+    var hoja = $('[data-hoja]');
+    if (!hoja) return;
+
+    var nombre = $('[data-hoja-nombre]', hoja);
+    var texto = $('[data-hoja-texto]', hoja);
+    var elegir = $('[data-hoja-elegir]', hoja);
+    var abierto = null;
+
+    function cerrar() {
+      hoja.hidden = true;
+      document.body.classList.remove('sin-scroll');
+      if (abierto) { abierto.focus(); abierto = null; }
+    }
+
+    function abrir(clave, origen) {
+      abierto = origen || null;
+      hoja.setAttribute('data-actual', clave);
+      if (nombre) nombre.textContent = txt('m.' + clave + '.n', clave);
+      if (texto) texto.textContent = txt('m.' + clave + '.d', '');
+      hoja.hidden = false;
+      document.body.classList.add('sin-scroll');
+      var c = $('.cerrar', hoja);
+      if (c) c.focus();
+    }
+
+    $$('[data-detalle]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        abrir(b.getAttribute('data-detalle'), b);   // solo uno abierto a la vez
+      });
+    });
+
+    $$('[data-cerrar-hoja]', hoja).forEach(function (b) {
+      b.addEventListener('click', cerrar);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !hoja.hidden) cerrar();
+    });
+
+    if (elegir) {
+      elegir.addEventListener('click', function () {
+        var clave = hoja.getAttribute('data-actual');
+        cerrar();
+        window.MV_reservar(clave, 60);
+      });
+    }
+  }
+
+
+  /* ── Pestañas de packs y suscripciones ────────────────── */
+  function iniciarPestanas() {
+    var botones = $$('[data-tab]');
+    if (!botones.length) return;
+
+    botones.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var cual = b.getAttribute('data-tab');
+        botones.forEach(function (o) {
+          var suyo = o === b;
+          o.classList.toggle('is-on', suyo);
+          o.setAttribute('aria-selected', String(suyo));
+        });
+        $$('[data-panel]').forEach(function (p) {
+          p.hidden = p.getAttribute('data-panel') !== cual;
+        });
       });
     });
   }
 
 
-  /* ── Cupos reales del Ritual de Apertura ──────────────── */
-  function iniciarCupos() {
-    var total = Math.max(1, CFG.cuposTotales);
-    var vendidos = Math.max(0, Math.min(CFG.cuposVendidos, total));
-    var libres = total - vendidos;
+  /* ── Textos legales ───────────────────────────────────── */
+  function iniciarLegales() {
+    var hoja = $('[data-legales]');
+    if (!hoja) return;
 
-    var numero = $('[data-cupos-libres]');
-    if (numero) numero.textContent = libres;
+    var titulo = $('[data-legal-titulo]', hoja);
+    var texto = $('[data-legal-texto]', hoja);
 
-    var barra = $('[data-cupos-barra]');
-    if (barra) {
-      // Se ve avanzar despacio, sin prisa fabricada
-      setTimeout(function () {
-        barra.style.width = ((vendidos / total) * 100) + '%';
-      }, 700);
+    function cerrar() {
+      hoja.hidden = true;
+      document.body.classList.remove('sin-scroll');
     }
 
-    // Si se acabaron, lo decimos con honestidad
-    if (libres === 0) {
-      $$('[data-elegir="apertura"]').forEach(function (b) {
-        b.classList.add('is-off');
-        b.setAttribute('aria-disabled', 'true');
-        b.textContent = txt('ap.agotado', 'Cupos agotados por ahora');
+    $$('[data-legal]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var cual = b.getAttribute('data-legal');
+        if (titulo) titulo.textContent = txt('le.' + cual + '.t', '');
+        if (texto) texto.textContent = txt('le.' + cual + '.p', '');
+        hoja.hidden = false;
+        document.body.classList.add('sin-scroll');
+        var c = $('.cerrar', hoja);
+        if (c) c.focus();
       });
-    }
+    });
+
+    $$('[data-cerrar-legal]', hoja).forEach(function (b) {
+      b.addEventListener('click', cerrar);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !hoja.hidden) cerrar();
+    });
   }
 
 
-  /* ── El motor de la reserva ───────────────────────────── */
+  /* ── El flujo de reserva ──────────────────────────────── */
   function iniciarReserva() {
-    var selector = $('[data-sel-servicio]');
-    if (!selector) return;
+    var caja = $('[data-reserva]');
+    if (!caja) return;
 
-    var bloqueDur = $('[data-bloque-duracion]');
-    var botonesDur = $$('[data-dur]');
-    var botonesAdd = $$('[data-add]');
-    var botonesPara = $$('[data-para]');
-    var cajaRegalo = $('[data-regalo]');
-    var campoNombre = $('[data-regalo-nombre]');
-    var campoMensaje = $('[data-regalo-mensaje]');
+    var TOTAL_ETAPAS = 5;
 
-    var rServicio = $('[data-r-servicio]');
-    var rDuracion = $('[data-r-duracion]');
-    var rExtras   = $('[data-r-extras]');
-    var rPara     = $('[data-r-para]');
-    var rTotal    = $('[data-r-total]');
-    var filaExtras = $('[data-r-fila-extras]');
-    var filaPara   = $('[data-r-fila-para]');
+    var etapas = $$('[data-etapa]', caja);
+    var listaServicios = $('[data-servicios]', caja);
+    var botonesDur = $$('[data-dur]', caja);
+    var botonesExtra = $$('[data-extra]', caja);
+    var botonesPara = $$('[data-para]', caja);
+    var botonesRegalo = $$('[data-regalo-modo]', caja);
+    var cajaRegalo = $('[data-regalo]', caja);
 
-    var enlaceCal = $('[data-calendario]');
-    var casilla   = $('[data-acepto]');
-    var botonPago = $('[data-pagar]');
-    var botonWsp  = $('[data-wsp-reserva]');
+    var campoFecha = $('[data-fecha]', caja);
+    var campoFranja = $('[data-franja]', caja);
+    var campoNombre = $('[data-regalo-nombre]', caja);
+    var campoMensaje = $('[data-regalo-mensaje]', caja);
+    var campoComuna = $('[data-comuna]', caja);
+    var campoContacto = $('[data-contacto]', caja);
 
-    /* Duraciones que existen en el calendario */
-    var DURACIONES = [60, 70, 75, 90, 100, 105, 120];
+    var barra = $('[data-progreso]', caja);
+    var btnAtras = $('[data-atras]', caja);
+    var btnSiguiente = $('[data-siguiente]', caja);
+    var btnEnviar = $('[data-enviar]', caja);
+    var acepta = $('[data-acepta]', caja);
 
-    var estado = {
+    /* El estado vive aquí y se guarda, para no perderlo al
+       cerrar, volver atrás o cambiar de idioma. */
+    var E = {
+      servicio: '',
       duracion: 60,
-      extraDur: 0,
-      para: 'mi'
+      extras: [],
+      para: 'mi',
+      regaloModo: 'agendar',
+      etapa: 1
     };
 
-    function opcionActual() {
-      return selector.options[selector.selectedIndex] || null;
-    }
-
-    function esFijo() {
-      var op = opcionActual();
-      return !!(op && op.getAttribute('data-fijo') === '1');
-    }
-
-    function extrasElegidos() {
-      return botonesAdd.filter(function (b) { return b.classList.contains('is-on'); });
-    }
-
-    /* La duración que pediremos al calendario: la más cercana
-       hacia arriba entre las que existen de verdad. */
-    function duracionCalendario(minutos) {
-      for (var i = 0; i < DURACIONES.length; i++) {
-        if (DURACIONES[i] >= minutos) return DURACIONES[i];
-      }
-      return DURACIONES[DURACIONES.length - 1];
-    }
-
-    function refrescar() {
-      var op = opcionActual();
-      var fijo = esFijo();
-
-      // Los packs, suscripciones y el Ritual no eligen duración aquí
-      if (bloqueDur) bloqueDur.hidden = fijo || !op || !op.value;
-
-      var base = op ? Number(op.getAttribute('data-precio') || 0) : 0;
-      var total = base;
-      var minutos = 0;
-      var nombres = [];
-
-      if (!fijo && op && op.value) {
-        total += estado.extraDur;
-        minutos = estado.duracion;
-
-        extrasElegidos().forEach(function (b) {
-          total += Number(b.getAttribute('data-precio') || 0);
-          minutos += Number(b.getAttribute('data-min') || 0);
-          nombres.push(b.querySelector('span').textContent.trim());
-        });
-      }
-
-      // Resumen
-      if (rServicio) {
-        rServicio.textContent = (op && op.value)
-          ? op.textContent.trim()
-          : '—';
-      }
-
-      if (rDuracion) {
-        rDuracion.textContent = minutos
-          ? minutos + ' ' + txt('re.minutos', 'minutos')
-          : (fijo ? txt('re.porSesion', 'Se agenda sesión por sesión') : '—');
-      }
-
-      if (filaExtras) filaExtras.hidden = !nombres.length;
-      if (rExtras) rExtras.textContent = nombres.length ? nombres.join(' · ') : '—';
-
-      var nombreRegalo = campoNombre ? campoNombre.value.trim() : '';
-      if (filaPara) filaPara.hidden = estado.para !== 'regalo';
-      if (rPara) {
-        rPara.textContent = nombreRegalo || txt('re.regaloSin', 'Regalo');
-      }
-
-      if (rTotal) rTotal.textContent = (op && op.value) ? pesos(total) : '—';
-
-      // Calendario con la duración real
-      if (enlaceCal) {
-        var destino = CFG.enlaceCalendario;
-        if (!fijo && minutos) {
-          var d = duracionCalendario(minutos);
-          if (CFG.calendarios && CFG.calendarios[d]) destino = CFG.calendarios[d];
-        }
-        enlaceCal.href = destino;
-      }
-
-      // Guardamos la elección para el mensaje de WhatsApp
-      var resumen = {
-        servicio: (op && op.value) ? op.textContent.trim() : '',
-        minutos: minutos,
-        extras: nombres,
-        total: (op && op.value) ? pesos(total) : '',
-        regalo: estado.para === 'regalo' ? nombreRegalo : '',
-        mensaje: (estado.para === 'regalo' && campoMensaje) ? campoMensaje.value.trim() : ''
+    function guardar() {
+      var d = {
+        e: E,
+        f: campoFecha ? campoFecha.value : '',
+        fr: campoFranja ? campoFranja.value : '',
+        n: campoNombre ? campoNombre.value : '',
+        m: campoMensaje ? campoMensaje.value : '',
+        c: campoComuna ? campoComuna.value : '',
+        t: campoContacto ? campoContacto.value : ''
       };
-      try { sessionStorage.setItem('mv_reserva', JSON.stringify(resumen)); } catch (e) {}
-
-      pintarPago();
+      try { sessionStorage.setItem('mv_reserva', JSON.stringify(d)); } catch (err) {}
     }
 
-    /* Pagar solo se habilita al aceptar las condiciones */
-    function pintarPago() {
-      var listo = !!(casilla && casilla.checked) && !!(opcionActual() && opcionActual().value);
-      if (botonPago) {
-        botonPago.classList.toggle('is-off', !listo);
-        botonPago.setAttribute('aria-disabled', String(!listo));
-        botonPago.href = listo ? CFG.enlacePago : '#';
+    function recuperar() {
+      var d = null;
+      try { d = JSON.parse(sessionStorage.getItem('mv_reserva') || 'null'); } catch (err) {}
+      if (!d || !d.e) return;
+
+      E.servicio = d.e.servicio || '';
+      E.duracion = d.e.duracion || 60;
+      E.extras = d.e.extras || [];
+      E.para = d.e.para || 'mi';
+      E.regaloModo = d.e.regaloModo || 'agendar';
+
+      if (campoFecha) campoFecha.value = d.f || '';
+      if (campoFranja && d.fr) campoFranja.value = d.fr;
+      if (campoNombre) campoNombre.value = d.n || '';
+      if (campoMensaje) campoMensaje.value = d.m || '';
+      if (campoComuna) campoComuna.value = d.c || '';
+      if (campoContacto) campoContacto.value = d.t || '';
+    }
+
+    /* Los servicios se arman desde el catálogo, así el
+       idioma y los precios salen siempre del mismo sitio. */
+    function pintarServicios() {
+      if (!listaServicios) return;
+      listaServicios.innerHTML = '';
+
+      MASAJES.concat(Object.keys(FIJOS)).forEach(function (clave) {
+        var fijo = FIJOS[clave];
+        var b = document.createElement('button');
+        b.className = 'opcion opcion--fila';
+        b.setAttribute('data-servicio', clave);
+
+        var izq = document.createElement('span');
+        izq.textContent = fijo ? txt(fijo.clave, clave) : txt('m.' + clave + '.n', clave);
+
+        var der = document.createElement('strong');
+        der.textContent = fijo ? pesos(fijo.precio) : txt('op.desde', 'Desde') + ' ' + pesos(BASE_60);
+
+        b.appendChild(izq);
+        b.appendChild(der);
+        b.addEventListener('click', function () {
+          E.servicio = clave;
+          pintarServicios();
+          calcular();
+        });
+
+        if (E.servicio === clave) b.classList.add('is-on');
+        listaServicios.appendChild(b);
+      });
+    }
+
+    function esFijo() { return !!FIJOS[E.servicio]; }
+
+    function nombreServicio() {
+      if (!E.servicio) return '—';
+      var fijo = FIJOS[E.servicio];
+      return fijo ? txt(fijo.clave, E.servicio) : txt('m.' + E.servicio + '.n', E.servicio);
+    }
+
+    function datosExtras() {
+      var min = 0, precio = 0, nombres = [];
+      E.extras.forEach(function (clave) {
+        var b = $('[data-extra="' + clave + '"]', caja);
+        if (!b) return;
+        min += Number(b.getAttribute('data-min') || 0);
+        precio += Number(b.getAttribute('data-precio') || 0);
+        nombres.push(b.querySelector('span').textContent.trim());
+      });
+      return { min: min, precio: precio, nombres: nombres };
+    }
+
+    function calcular() {
+      var fijo = FIJOS[E.servicio];
+      var ex = datosExtras();
+      var total = 0, minutos = 0;
+
+      if (fijo) {
+        total = fijo.precio;
+      } else if (E.servicio) {
+        total = BASE_60 + (E.duracion === 90 ? EXTRA_90 : 0) + ex.precio;
+        minutos = E.duracion + ex.min;
       }
+
+      pintarDuraciones();
+      pintarExtras();
+      pintarResumen(total, minutos, ex);
+      pintarPie(total, minutos);
+      guardar();
     }
+
+    function pintarDuraciones() {
+      botonesDur.forEach(function (b) {
+        b.classList.toggle('is-on', Number(b.getAttribute('data-dur')) === E.duracion);
+      });
+    }
+
+    function pintarExtras() {
+      botonesExtra.forEach(function (b) {
+        var suyo = E.extras.indexOf(b.getAttribute('data-extra')) !== -1;
+        b.classList.toggle('is-on', suyo);
+        b.setAttribute('aria-pressed', String(suyo));
+      });
+    }
+
+    function textoCuando() {
+      if (!campoFecha || !campoFecha.value) return '';
+      var partes = campoFecha.value.split('-');
+      var dia = partes[2] + '/' + partes[1] + '/' + partes[0];
+      var franja = campoFranja
+        ? campoFranja.options[campoFranja.selectedIndex].textContent.trim()
+        : '';
+      return dia + (franja ? ' · ' + franja : '');
+    }
+
+    function textoPara() {
+      if (E.para !== 'regalo') return '';
+      var quien = campoNombre ? campoNombre.value.trim() : '';
+      var modo = E.regaloModo === 'tarjeta'
+        ? txt('re.regaloTarjeta', 'Tarjeta de regalo')
+        : txt('re.regaloAgendar', 'Agendo yo la hora');
+      return (quien || txt('re.regaloSin', 'Regalo')) + ' · ' + modo;
+    }
+
+    function pintarResumen(total, minutos, ex) {
+      var puesto = function (sel, valor) {
+        var el = $(sel, caja);
+        if (el) el.textContent = valor;
+      };
+      var fila = function (sel, mostrar) {
+        var el = $(sel, caja);
+        if (el) el.hidden = !mostrar;
+      };
+
+      puesto('[data-r-servicio]', nombreServicio());
+
+      var filaDur = $('[data-r-fila-dur]', caja);
+      if (filaDur) filaDur.hidden = !minutos;
+      puesto('[data-r-duracion]', minutos ? minutos + ' ' + txt('re.minutos', 'minutos') : '—');
+
+      fila('[data-r-fila-extras]', ex.nombres.length > 0);
+      puesto('[data-r-extras]', ex.nombres.join(' · ') || '—');
+
+      var cuando = textoCuando();
+      fila('[data-r-fila-cuando]', !!cuando);
+      puesto('[data-r-cuando]', cuando || '—');
+
+      var para = textoPara();
+      fila('[data-r-fila-para]', !!para);
+      puesto('[data-r-para]', para || '—');
+
+      puesto('[data-r-total]', E.servicio ? pesos(total) : '—');
+    }
+
+    function pintarPie(total, minutos) {
+      var mDur = $('[data-r-mini-dur]', caja);
+      var mTot = $('[data-r-mini-total]', caja);
+
+      if (mDur) {
+        mDur.textContent = minutos
+          ? minutos + ' ' + txt('re.minutos', 'minutos')
+          : (esFijo() ? txt('re.varias', 'Varias sesiones') : txt('re.sinElegir', 'Sin elegir'));
+      }
+      if (mTot) mTot.textContent = E.servicio ? pesos(total) : '—';
+    }
+
+    /* ── Navegación entre etapas ── */
+    function saltaDuracion() { return esFijo(); }
+
+    /* Los packs, suscripciones y el Ritual no eligen duración:
+       la etapa 2 se salta en los dos sentidos. */
+    function etapaValida(n, sentido) {
+      if (n === 2 && saltaDuracion()) return sentido < 0 ? 1 : 3;
+      return n;
+    }
+
+    function irA(n) {
+      E.etapa = Math.max(1, Math.min(TOTAL_ETAPAS, n));
+
+      etapas.forEach(function (s) {
+        s.classList.toggle('is-on', Number(s.getAttribute('data-etapa')) === E.etapa);
+      });
+
+      if (barra) barra.style.width = (E.etapa / TOTAL_ETAPAS * 100) + '%';
+      if (btnAtras) btnAtras.hidden = E.etapa === 1;
+      if (btnSiguiente) btnSiguiente.hidden = E.etapa === TOTAL_ETAPAS;
+
+      var cuerpo = $('.reserva__cuerpo', caja);
+      if (cuerpo) cuerpo.scrollTop = 0;
+
+      pintarSiguiente();
+      guardar();
+    }
+
+    function pintarSiguiente() {
+      if (!btnSiguiente) return;
+      var puede = E.etapa !== 1 || !!E.servicio;
+      btnSiguiente.classList.toggle('esta-off', !puede);
+      btnSiguiente.setAttribute('aria-disabled', String(!puede));
+      btnSiguiente.textContent = E.etapa === 4
+        ? txt('re.revisar', 'Revisar')
+        : txt('re.continuar', 'Continuar');
+    }
+
+    function pintarEnviar() {
+      if (!btnEnviar) return;
+      var listo = !!E.servicio && !!(acepta && acepta.checked);
+      btnEnviar.classList.toggle('esta-off', !listo);
+      btnEnviar.setAttribute('aria-disabled', String(!listo));
+    }
+
+    /* ── Abrir y cerrar ── */
+    function abrir(servicio, minutos) {
+      if (servicio) E.servicio = servicio;
+      if (minutos) E.duracion = Number(minutos);
+
+      caja.hidden = false;
+      document.body.classList.add('sin-scroll', 'reservando');
+
+      pintarServicios();
+      calcular();
+      // Con el servicio ya elegido, entramos directo al paso siguiente
+      irA(servicio ? (saltaDuracion() ? 3 : 2) : 1);
+
+      var c = $('[data-cerrar-reserva]', caja);
+      if (c) c.focus();
+    }
+
+    function cerrar() {
+      caja.hidden = true;
+      document.body.classList.remove('sin-scroll', 'reservando');
+      guardar();                 // no se pierde nada al cerrar
+    }
+
+    window.MV_reservar = abrir;
 
     /* ── Escuchas ── */
-    selector.addEventListener('change', function () {
-      // Al cambiar de servicio, la duración vuelve a 60
-      botonesDur.forEach(function (b) {
-        b.classList.toggle('is-on', b.getAttribute('data-dur') === '60');
-      });
-      estado.duracion = 60;
-      estado.extraDur = 0;
-      refrescar();
+    $$('[data-abrir-reserva]').forEach(function (b) {
+      b.addEventListener('click', function () { abrir(); });
     });
 
-    botonesDur.forEach(function (boton) {
-      boton.addEventListener('click', function () {
-        botonesDur.forEach(function (b) { b.classList.remove('is-on'); });
-        boton.classList.add('is-on');
-        estado.duracion = Number(boton.getAttribute('data-dur'));
-        estado.extraDur = Number(boton.getAttribute('data-extra') || 0);
-        refrescar();
+    $$('[data-elegir]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        abrir(b.getAttribute('data-elegir'), b.getAttribute('data-min'));
       });
     });
 
-    botonesAdd.forEach(function (boton) {
-      boton.addEventListener('click', function () {
-        var grupo = boton.getAttribute('data-grupo');
+    $$('[data-cerrar-reserva]', caja).forEach(function (b) {
+      b.addEventListener('click', cerrar);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !caja.hidden) cerrar();
+    });
 
-        // +10 y +15 minutos son excluyentes entre sí
-        if (grupo && !boton.classList.contains('is-on')) {
-          botonesAdd.forEach(function (b) {
-            if (b !== boton && b.getAttribute('data-grupo') === grupo) b.classList.remove('is-on');
-          });
+    botonesDur.forEach(function (b) {
+      b.addEventListener('click', function () {
+        E.duracion = Number(b.getAttribute('data-dur'));
+        calcular();
+      });
+    });
+
+    botonesExtra.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var clave = b.getAttribute('data-extra');
+        var grupo = b.getAttribute('data-grupo');
+        var i = E.extras.indexOf(clave);
+
+        if (i === -1) {
+          // +10 y +15 minutos son excluyentes entre sí
+          if (grupo) {
+            E.extras = E.extras.filter(function (otra) {
+              var o = $('[data-extra="' + otra + '"]', caja);
+              return !o || o.getAttribute('data-grupo') !== grupo;
+            });
+          }
+          E.extras.push(clave);
+        } else {
+          E.extras.splice(i, 1);
         }
-
-        boton.classList.toggle('is-on');
-        boton.setAttribute('aria-pressed', String(boton.classList.contains('is-on')));
-        refrescar();
+        calcular();
       });
     });
 
-    botonesPara.forEach(function (boton) {
-      boton.addEventListener('click', function () {
-        botonesPara.forEach(function (b) { b.classList.remove('is-on'); });
-        boton.classList.add('is-on');
-        estado.para = boton.getAttribute('data-para');
-        if (cajaRegalo) cajaRegalo.hidden = estado.para !== 'regalo';
-        refrescar();
+    botonesPara.forEach(function (b) {
+      b.addEventListener('click', function () {
+        E.para = b.getAttribute('data-para');
+        botonesPara.forEach(function (o) {
+          o.classList.toggle('is-on', o === b);
+        });
+        if (cajaRegalo) cajaRegalo.hidden = E.para !== 'regalo';
+        calcular();
       });
     });
 
-    if (campoNombre) campoNombre.addEventListener('input', refrescar);
-    if (campoMensaje) campoMensaje.addEventListener('input', refrescar);
-    if (casilla) casilla.addEventListener('change', pintarPago);
+    botonesRegalo.forEach(function (b) {
+      b.addEventListener('click', function () {
+        E.regaloModo = b.getAttribute('data-regalo-modo');
+        botonesRegalo.forEach(function (o) {
+          o.classList.toggle('is-on', o === b);
+        });
+        calcular();
+      });
+    });
 
-    /* WhatsApp con el detalle de lo que armó la persona */
-    if (botonWsp) {
-      botonWsp.addEventListener('click', function () {
-        var r = null;
-        try { r = JSON.parse(sessionStorage.getItem('mv_reserva') || 'null'); } catch (e) {}
+    [campoFecha, campoFranja, campoNombre, campoMensaje, campoComuna, campoContacto]
+      .forEach(function (c) {
+        if (c) c.addEventListener('input', calcular);
+        if (c && c.tagName === 'SELECT') c.addEventListener('change', calcular);
+      });
 
-        var lineas = ['Hola Alejandro, quiero reservar en Manos Vivas.'];
-        if (r && r.servicio) {
-          lineas.push('Servicio: ' + r.servicio);
-          if (r.minutos) lineas.push('Duración: ' + r.minutos + ' minutos');
-          if (r.extras && r.extras.length) lineas.push('Complementos: ' + r.extras.join(', '));
-          if (r.regalo) lineas.push('Es un regalo para: ' + r.regalo);
-          if (r.mensaje) lineas.push('Mensaje: ' + r.mensaje);
-          if (r.total) lineas.push('Total: ' + r.total);
+    if (acepta) acepta.addEventListener('change', pintarEnviar);
+
+    if (btnSiguiente) {
+      btnSiguiente.addEventListener('click', function () {
+        if (btnSiguiente.getAttribute('aria-disabled') === 'true') return;
+        irA(etapaValida(E.etapa + 1, 1));
+      });
+    }
+    if (btnAtras) {
+      btnAtras.addEventListener('click', function () { irA(etapaValida(E.etapa - 1, -1)); });
+    }
+
+    /* El envío: una solicitud honesta por WhatsApp */
+    if (btnEnviar) {
+      btnEnviar.addEventListener('click', function () {
+        if (btnEnviar.getAttribute('aria-disabled') === 'true') return;
+
+        btnEnviar.classList.add('esta-cargando');
+
+        var ex = datosExtras();
+        var fijo = FIJOS[E.servicio];
+        var total = fijo
+          ? fijo.precio
+          : BASE_60 + (E.duracion === 90 ? EXTRA_90 : 0) + ex.precio;
+        var minutos = fijo ? 0 : E.duracion + ex.min;
+
+        var l = [txt('wsp.saludo', 'Hola, quiero reservar en Manos Vivas.'), ''];
+        l.push(txt('re.rServicio', 'Servicio') + ': ' + nombreServicio());
+        if (minutos) l.push(txt('re.rDuracion', 'Duración total') + ': ' + minutos + ' min');
+        if (ex.nombres.length) l.push(txt('re.rExtras', 'Complementos') + ': ' + ex.nombres.join(', '));
+
+        var cuando = textoCuando();
+        if (cuando) l.push(txt('re.rCuando', 'Preferencia') + ': ' + cuando);
+
+        var para = textoPara();
+        if (para) l.push(txt('re.rPara', 'Para') + ': ' + para);
+        if (E.para === 'regalo' && campoMensaje && campoMensaje.value.trim()) {
+          l.push(txt('re.regaloMensaje', 'Mensaje') + ': ' + campoMensaje.value.trim());
         }
+        if (campoComuna && campoComuna.value.trim()) {
+          l.push(txt('re.comuna', 'Comuna') + ': ' + campoComuna.value.trim());
+        }
+        if (campoContacto && campoContacto.value.trim()) {
+          l.push(txt('re.contacto', 'Contacto') + ': ' + campoContacto.value.trim());
+        }
+        l.push(txt('re.rTotal', 'Total') + ': ' + pesos(total));
 
-        botonWsp.href = 'https://wa.me/' + CFG.whatsapp +
-                        '?text=' + encodeURIComponent(lineas.join('\n'));
+        var url = 'https://wa.me/' + CFG.whatsapp + '?text=' + encodeURIComponent(l.join('\n'));
+        window.open(url, '_blank', 'noopener');
+
+        setTimeout(function () { btnEnviar.classList.remove('esta-cargando'); }, 900);
       });
     }
 
-    /* Los botones "Reservar" repartidos por toda la página */
-    $$('[data-elegir]').forEach(function (boton) {
-      boton.addEventListener('click', function () {
-        if (boton.getAttribute('aria-disabled') === 'true') return;
-
-        var valor = boton.getAttribute('data-elegir');
-        var min = boton.getAttribute('data-min');
-
-        var existe = Array.prototype.some.call(selector.options, function (o) {
-          return o.value === valor;
-        });
-        if (existe) selector.value = valor;
-
-        if (min) {
-          botonesDur.forEach(function (b) {
-            var suyo = b.getAttribute('data-dur') === String(min);
-            b.classList.toggle('is-on', suyo);
-            if (suyo) {
-              estado.duracion = Number(min);
-              estado.extraDur = Number(b.getAttribute('data-extra') || 0);
-            }
-          });
-        }
-
-        refrescar();
-
-        var destino = $('#reservar');
-        if (destino) destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
+    /* ── Arranque del flujo ── */
+    recuperar();
+    pintarServicios();
+    if (cajaRegalo) cajaRegalo.hidden = E.para !== 'regalo';
+    botonesPara.forEach(function (o) {
+      o.classList.toggle('is-on', o.getAttribute('data-para') === E.para);
     });
+    botonesRegalo.forEach(function (o) {
+      o.classList.toggle('is-on', o.getAttribute('data-regalo-modo') === E.regaloModo);
+    });
+    calcular();
+    pintarEnviar();
 
-    refrescar();
+    // La fecha nunca puede ser de ayer
+    if (campoFecha) {
+      var hoy = new Date();
+      campoFecha.min = hoy.getFullYear() + '-' +
+        String(hoy.getMonth() + 1).padStart(2, '0') + '-' +
+        String(hoy.getDate()).padStart(2, '0');
+    }
+
+    // Cuando cambia el idioma, se repinta sin perder lo elegido
+    document.addEventListener('mv:idioma', function () {
+      pintarServicios();
+      calcular();
+      pintarSiguiente();
+    });
   }
 
 
-  /* ── Enlaces que salen de la configuración ────────────── */
+  /* ── Enlaces de la configuración ──────────────────────── */
   function iniciarEnlaces() {
-    $$('[data-review]').forEach(function (a) {
-      a.href = CFG.enlaceResenas; a.target = '_blank'; a.rel = 'noopener';
-    });
     $$('[data-instagram]').forEach(function (a) { a.href = CFG.instagram; });
     $$('[data-facebook]').forEach(function (a) { a.href = CFG.facebook; });
-    $$('[data-wsp-flotante]').forEach(function (a) {
+    $$('[data-wsp]').forEach(function (a) {
       a.href = 'https://wa.me/' + CFG.whatsapp;
     });
   }
 
 
-
-  /* ── Preferencias: idioma, modo, texto y sonido ───────── */
-
-  var PREF = {
-    leer: function (clave, porDefecto) {
-      try { return localStorage.getItem('mv_' + clave) || porDefecto; }
-      catch (e) { return porDefecto; }
-    },
-    guardar: function (clave, valor) {
-      try { localStorage.setItem('mv_' + clave, valor); } catch (e) {}
-    }
-  };
-
-
   /* ── Idiomas ──────────────────────────────────────────── */
   function iniciarIdiomas() {
-    var DICC = window.__IDIOMAS__;
-    if (!DICC) return;
+    var D = window.IDIOMAS;
+    if (!D) return;
 
     var botones = $$('[data-lang]');
 
     function aplicar(idioma) {
-      var d = DICC[idioma];
+      var d = D[idioma];
       if (!d) return;
 
-      // Textos de la página
       $$('[data-t]').forEach(function (el) {
         var clave = el.getAttribute('data-t');
         if (d[clave] != null) el.innerHTML = d[clave];
       });
 
-      // Etiquetas para lectores de pantalla y grupos de opciones
       $$('[data-t-label]').forEach(function (el) {
         var clave = el.getAttribute('data-t-label');
-        if (!d[clave]) return;
-        if (el.tagName === 'OPTGROUP') el.setAttribute('label', d[clave]);
-        else el.setAttribute('aria-label', d[clave]);
+        if (d[clave]) el.setAttribute('aria-label', d[clave]);
       });
 
-      // Cabecera del documento
       if (d['doc.titulo']) document.title = d['doc.titulo'];
       var meta = $('meta[name="description"]');
       if (meta && d['doc.desc']) meta.setAttribute('content', d['doc.desc']);
@@ -530,197 +782,38 @@ window.__MANOS_VIVAS__ = {
         b.setAttribute('aria-pressed', String(suyo));
       });
 
-      PREF.guardar('idioma', idioma);
+      try { localStorage.setItem('mv_idioma', idioma); } catch (e) {}
 
-      refrescarEtiquetaMenu(d);
+      // Que el resto de la web se entere y se repinte
+      document.dispatchEvent(new CustomEvent('mv:idioma', { detail: idioma }));
     }
 
     botones.forEach(function (b) {
-      b.addEventListener('click', function () {
-        aplicar(b.getAttribute('data-lang'));
-      });
+      b.addEventListener('click', function () { aplicar(b.getAttribute('data-lang')); });
     });
 
-    // Idioma guardado, o el del navegador, o español
-    var guardado = PREF.leer('idioma', null);
+    var guardado = null;
+    try { guardado = localStorage.getItem('mv_idioma'); } catch (e) {}
     if (!guardado) {
       var nav = (navigator.language || 'es').slice(0, 2).toLowerCase();
-      guardado = DICC[nav] ? nav : 'es';
+      guardado = D[nav] ? nav : 'es';
     }
-    aplicar(DICC[guardado] ? guardado : 'es');
-  }
-
-  function refrescarEtiquetaMenu(d) {
-    var boton = $('[data-burger]');
-    if (!boton || !d) return;
-    var abierto = boton.getAttribute('aria-expanded') === 'true';
-    var clave = abierto ? 'a11y.menuCerrar' : 'a11y.menu';
-    if (d[clave]) boton.setAttribute('aria-label', d[clave]);
-  }
-
-
-  /* ── Modo día y noche ─────────────────────────────────── */
-  function iniciarModo() {
-    var boton = $('[data-modo-btn]');
-    var raiz = document.documentElement;
-
-    function aplicar(modo) {
-      raiz.setAttribute('data-modo', modo);
-      if (boton) boton.setAttribute('aria-pressed', String(modo === 'noche'));
-
-      var meta = $('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', modo === 'noche' ? '#15180f' : '#f7f2ea');
-
-      PREF.guardar('modo', modo);
-    }
-
-    // Preferencia guardada, o la del sistema
-    var guardado = PREF.leer('modo', null);
-    if (!guardado) {
-      var oscuro = window.matchMedia &&
-                   window.matchMedia('(prefers-color-scheme: dark)').matches;
-      guardado = oscuro ? 'noche' : 'dia';
-    }
-    aplicar(guardado);
-
-    if (boton) {
-      boton.addEventListener('click', function () {
-        aplicar(raiz.getAttribute('data-modo') === 'noche' ? 'dia' : 'noche');
-      });
-    }
-  }
-
-
-  /* ── Tamaño del texto ─────────────────────────────────── */
-  function iniciarTexto() {
-    var PASOS = [100, 112, 125, 140];
-    var raiz = document.documentElement;
-
-    var actual = parseInt(PREF.leer('texto', '100'), 10);
-    if (PASOS.indexOf(actual) === -1) actual = 100;
-
-    function aplicar(valor) {
-      actual = valor;
-      raiz.style.fontSize = valor + '%';
-      PREF.guardar('texto', String(valor));
-
-      $$('[data-texto]').forEach(function (b) {
-        var esMas = b.getAttribute('data-texto') === 'mas';
-        b.disabled = esMas ? (valor === PASOS[PASOS.length - 1]) : (valor === PASOS[0]);
-      });
-    }
-
-    aplicar(actual);
-
-    $$('[data-texto]').forEach(function (boton) {
-      boton.addEventListener('click', function () {
-        var i = PASOS.indexOf(actual);
-        var siguiente = boton.getAttribute('data-texto') === 'mas' ? i + 1 : i - 1;
-        if (siguiente >= 0 && siguiente < PASOS.length) aplicar(PASOS[siguiente]);
-      });
-    });
-  }
-
-
-  /* ── Sonido ambiental ─────────────────────────────────── */
-  function iniciarSonido() {
-    var boton = $('[data-sonido-btn]');
-    if (!boton) return;
-
-    var audio = null, maestro = null, voces = [], sonando = false;
-
-    function construir() {
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return false;
-
-      audio = new AC();
-      maestro = audio.createGain();
-      maestro.gain.value = 0;
-      maestro.connect(audio.destination);
-
-      // Un acorde muy suave y grave, casi un cuenco tibetano
-      [110, 164.81, 220, 329.63].forEach(function (hz, i) {
-        var osc = audio.createOscillator();
-        var vol = audio.createGain();
-        var vaiven = audio.createOscillator();
-        var prof = audio.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.value = hz;
-
-        // Cada voz respira a su propio ritmo
-        vaiven.frequency.value = 0.045 + i * 0.021;
-        prof.gain.value = 0.32;
-        vaiven.connect(prof);
-        prof.connect(vol.gain);
-
-        vol.gain.value = 0.42 / (i + 1.4);
-
-        osc.connect(vol);
-        vol.connect(maestro);
-
-        osc.start();
-        vaiven.start();
-        voces.push(osc, vaiven);
-      });
-
-      return true;
-    }
-
-    function subir() {
-      if (!audio && !construir()) return;
-      if (audio.state === 'suspended') audio.resume();
-      maestro.gain.cancelScheduledValues(audio.currentTime);
-      maestro.gain.setTargetAtTime(0.055, audio.currentTime, 1.6);
-      sonando = true;
-    }
-
-    function bajar() {
-      if (!maestro) return;
-      maestro.gain.cancelScheduledValues(audio.currentTime);
-      maestro.gain.setTargetAtTime(0, audio.currentTime, 0.9);
-      sonando = false;
-    }
-
-    function pintar() {
-      boton.setAttribute('aria-pressed', String(sonando));
-      boton.classList.toggle('is-on', sonando);
-      boton.setAttribute('aria-label', sonando
-        ? txt('a11y.sonidoOff', 'Apagar el sonido ambiental')
-        : txt('a11y.sonido', 'Encender el sonido ambiental'));
-    }
-
-    boton.addEventListener('click', function () {
-      if (sonando) bajar(); else subir();
-      pintar();
-      PREF.guardar('sonido', sonando ? 'si' : 'no');
-    });
-
-    // Nunca arranca solo: siempre requiere que la persona lo pida
-    pintar();
-
-    // Al cambiar de pestaña, se calla
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden && sonando && audio) audio.suspend();
-      else if (!document.hidden && sonando && audio) audio.resume();
-    });
+    aplicar(D[guardado] ? guardado : 'es');
   }
 
 
   /* ── Arranque ─────────────────────────────────────────── */
   function arrancar() {
-    safe(iniciarModo,        'modo');
-    safe(iniciarTexto,       'texto');
-    safe(iniciarIdiomas,     'idiomas');
-    safe(iniciarSonido,      'sonido');
-    safe(iniciarApertura,    'apertura');
-    safe(iniciarNav,         'nav');
-    safe(iniciarMenu,        'menu');
-    safe(iniciarApariciones, 'apariciones');
-    safe(iniciarDetalles,    'detalles');
-    safe(iniciarCupos,       'cupos');
-    safe(iniciarReserva,     'reserva');
-    safe(iniciarEnlaces,     'enlaces');
+    seguro(iniciarIdiomas,     'idiomas');
+    seguro(iniciarIntro,       'intro');
+    seguro(iniciarNav,         'nav');
+    seguro(iniciarApariciones, 'apariciones');
+    seguro(iniciarAnimo,       'animo');
+    seguro(iniciarDetalle,     'detalle');
+    seguro(iniciarPestanas,    'pestanas');
+    seguro(iniciarLegales,     'legales');
+    seguro(iniciarReserva,     'reserva');
+    seguro(iniciarEnlaces,     'enlaces');
   }
 
   if (document.readyState === 'loading') {
