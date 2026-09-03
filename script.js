@@ -13,13 +13,27 @@ window.MV = {
   instagram: 'https://instagram.com/manosvivas',
   facebook:  'https://facebook.com/manosvivas',
 
-  // Cuando tengas Calendly y Mercado Pago funcionando de verdad,
-  // pon aquí los enlaces y cambia `pagoEnLinea` a true.
-  // Mientras estén vacíos, la web envía una SOLICITUD por WhatsApp
-  // y nunca dice que una hora quedó tomada.
-  enlaceCalendario: '',
-  enlacePago: '',
-  pagoEnLinea: false
+  // ── LINKS DE PAGO DE MERCADO PAGO ────────────────────────
+  // Crea un link por cada monto en Mercado Pago (Cobrar → Link de
+  // pago) y pega aquí la dirección que te da, entre las comillas.
+  //
+  // Mientras un link esté vacío, ese botón simplemente no aparece:
+  // la web nunca finge un cobro que no existe.
+  pagos: {
+    s60:      '',   // Sesión de 60 minutos · $55.000
+    s90:      '',   // Sesión de 90 minutos · $73.000
+    apertura: '',   // Ritual de Apertura · $89.990
+    pack4:    '',   // Pack Chico · $195.000
+    pack6:    '',   // Pack Mediano · $295.000
+    pack8:    '',   // Pack Grande · $395.000
+    sub1:     '',   // Suscripción Esencial · $55.000 al mes
+    sub2:     '',   // Suscripción Bienestar · $105.000 al mes
+    sub4:     '',   // Suscripción Vital · $205.000 al mes
+    sub8:     ''    // Suscripción Premium · $380.000 al mes
+  },
+
+  // Cuando tengas Calendly funcionando, pon aquí su enlace.
+  enlaceCalendario: ''
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -321,6 +335,7 @@ window.MV = {
     var btnAtras = $('[data-atras]', caja);
     var btnSiguiente = $('[data-siguiente]', caja);
     var btnEnviar = $('[data-enviar]', caja);
+    var btnPagar = $('[data-pagar]', caja);
     var acepta = $('[data-acepta]', caja);
 
     /* El estado vive aquí y se guarda, para no perderlo al
@@ -433,6 +448,7 @@ window.MV = {
       pintarExtras();
       pintarResumen(total, minutos, ex);
       pintarPie(total, minutos);
+      pintarEnviar();
       guardar();
     }
 
@@ -550,10 +566,31 @@ window.MV = {
     }
 
     function pintarEnviar() {
-      if (!btnEnviar) return;
       var listo = !!E.servicio && !!(acepta && acepta.checked);
-      btnEnviar.classList.toggle('esta-off', !listo);
-      btnEnviar.setAttribute('aria-disabled', String(!listo));
+
+      if (btnEnviar) {
+        btnEnviar.classList.toggle('esta-off', !listo);
+        btnEnviar.setAttribute('aria-disabled', String(!listo));
+      }
+
+      /* El botón de pago aparece solo si existe un link real
+         para lo que la persona eligió, y solo tras aceptar. */
+      if (btnPagar) {
+        var link = linkDePago();
+        var muestro = listo && !!link;
+        btnPagar.hidden = !muestro;
+        if (muestro) btnPagar.href = link;
+      }
+    }
+
+    /* Qué link corresponde a lo elegido */
+    function linkDePago() {
+      var P = CFG.pagos || {};
+      if (!E.servicio) return '';
+      if (FIJOS[E.servicio]) return P[E.servicio] || '';
+      // Una sesión suelta: depende de la duración, y solo sin complementos
+      if (datosExtras().precio > 0) return '';
+      return (E.duracion === 90 ? P.s90 : P.s60) || '';
     }
 
     /* ── Abrir y cerrar ── */
